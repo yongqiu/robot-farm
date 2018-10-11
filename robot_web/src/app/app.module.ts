@@ -15,10 +15,10 @@ registerLocaleData(zh);
 export const routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // {
-  //   path: 'hot-search',
-  //   children: [{ path: '', loadChildren: './routes/hot-search/hot-search.module#HotSearchModule' }]
-  // },
+  {
+    path: 'login',
+    children: [{ path: '', loadChildren: './routes/login/login.module#LoginModule' }]
+  },
   {
     path: '',
     component: LayoutComponent,
