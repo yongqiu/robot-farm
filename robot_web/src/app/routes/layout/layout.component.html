@@ -1,0 +1,45 @@
+<ul nz-menu [nzMode]="'horizontal'" class="header" (window:resize)="windowResize()">
+  <!-- <li nz-menu-item (click)="routeToQQmusic()"><i class="anticon anticon-mail"></i>数字专辑</li> -->
+  <!-- <li nz-menu-item (click)="routeToTable()"><i class="anticon anticon-mail"></i>数据</li> -->
+  <!-- <li nz-menu-item (click)="routeToCharts()"><i class="anticon anticon-pie-chart"></i>图表</li> -->
+  <li nz-menu-item (click)="routeToHot()">
+    <i class="anticon anticon-rocket"></i>主页</li>
+  <li nz-submenu>
+    <span title>
+      <i class="anticon anticon-notification"></i>生产管理</span>
+    <ul>
+      <li nz-menu-group>
+        <ul>
+          <li nz-menu-item>任务展示</li>
+          <li nz-menu-item>任务操作</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li nz-menu-item (click)="routeToHot()">
+    <i class="anticon anticon-rocket"></i>设备检测
+  </li>
+  <li nz-menu-item (click)="routeToHot()">
+    <i class="anticon anticon-rocket"></i>设备调度
+  </li>
+  <li nz-submenu>
+    <span title>
+      <i class="anticon anticon-notification"></i>后台管理</span>
+    <ul>
+      <li nz-menu-group>
+        <ul>
+          <li nz-menu-item>蔬菜种类管理</li>
+          <li nz-menu-item>栽培架管理</li>
+          <li nz-menu-item>地标管理</li>
+          <li nz-menu-item>地标布局管理</li>
+          <li nz-menu-item>权限管理</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<div class="content" #content>
+  <div class="scroll-panel">
+    <router-outlet></router-outlet>
+  </div>
+</div>
