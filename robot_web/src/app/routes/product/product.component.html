@@ -1,114 +1,126 @@
-<nz-tabset>
-  <nz-tab nzTitle="上架任务">
-    <div class="uptable">
-      <nz-table #upTable nzBordered [nzData]="dataSet">
-        <thead>
-          <tr>
-            <th nzWidth="10%">序号</th>
-            <th nzWidth="15%">操作类型</th>
-            <th nzWidth="15%">架号</th>
-            <th nzWidth="15%">槽号</th>
-            <th nzWidth="15%">盘号</th>
-            <th nzWidth="10%">上架蔬菜</th>
-            <th nzWidth="15%">上架日期</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of upTable.data;let i = index">
-            <td>
-              {{i+1}}
-            </td>
-            <td>
-              {{data.type}}
-            </td>
-            <td>
-              {{data.jiahao}}
-            </td>
-            <td>
-              {{data.caohao}}
-            </td>
-            <td>
-              {{data.panhao}}
-            </td>
-            <td>
-              {{data.vegetables}}
-            </td>
-            <td>
-              {{data.date}}
-            </td>
-            <td>
-              <div class="editable-row-operations">
-                <ng-container *ngIf="!editCache[data.key].edit">
-                  <a (click)="startEdit(data.key)">编辑</a>
-                </ng-container>
-                <ng-container *ngIf="editCache[data.key].edit">
-                  <a (click)="saveEdit(data.key)">保存</a>
-                  <nz-popconfirm [nzTitle]="'Sure to cancel?'" (nzOnConfirm)="cancelEdit(data.key)">
-                    <a nz-popconfirm>取消</a>
-                  </nz-popconfirm>
-                </ng-container>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </div>
-  </nz-tab>
-  <nz-tab nzTitle="下架任务">
-    <div class="downtable">
-      <nz-table #downTable nzBordered [nzData]="dataSet">
-        <thead>
-          <tr>
-            <th nzWidth="10%">序号</th>
-            <th nzWidth="15%">操作类型</th>
-            <th nzWidth="15%">架号</th>
-            <th nzWidth="15%">槽号</th>
-            <th nzWidth="15%">盘号</th>
-            <th nzWidth="10%">上架蔬菜</th>
-            <th nzWidth="15%">上架日期</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of downTable.data;let i = index">
-            <td>
-              {{i+1}}
-            </td>
-            <td>
-              {{data.type}}
-            </td>
-            <td>
-              {{data.jiahao}}
-            </td>
-            <td>
-              {{data.caohao}}
-            </td>
-            <td>
-              {{data.panhao}}
-            </td>
-            <td>
-              {{data.vegetables}}
-            </td>
-            <td>
-              {{data.date}}
-            </td>
-            <td>
-              <div class="editable-row-operations">
-                <ng-container *ngIf="!editCache[data.key].edit">
-                  <a (click)="startEdit(data.key)">编辑</a>
-                </ng-container>
-                <ng-container *ngIf="editCache[data.key].edit">
-                  <a (click)="saveEdit(data.key)">保存</a>
-                  <nz-popconfirm [nzTitle]="'Sure to cancel?'" (nzOnConfirm)="cancelEdit(data.key)">
-                    <a nz-popconfirm>取消</a>
-                  </nz-popconfirm>
-                </ng-container>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-    </div>
-  </nz-tab>
-</nz-tabset>
+<div class="card-container">
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+    <nz-tab nzTitle="上架任务">
+      <div class="uptable">
+        <p>
+          本日计划上架50个，已完成30个，剩余20个
+          <button class="add" nz-button nzType="primary">新增任务</button>
+          <button class="delete" nz-button nzType="danger">删除任务</button>
+        </p>
+        <nz-table #upTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
+          <thead>
+            <tr>
+              <th nzWidth="5%">序号</th>
+              <th nzWidth="10%">操作类型</th>
+              <th nzWidth="10%">架号</th>
+              <th nzWidth="10%">槽号</th>
+              <th nzWidth="10%">盘号</th>
+              <th nzWidth="10%">上架蔬菜</th>
+              <th nzWidth="10%">上架日期</th>
+              <th nzWidth="5%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of upTable.data;let i = index">
+              <td>
+                {{i+1}}
+              </td>
+              <td>
+                {{data.type}}
+              </td>
+              <td>
+                {{data.jiahao}}
+              </td>
+              <td>
+                {{data.caohao}}
+              </td>
+              <td>
+                {{data.panhao}}
+              </td>
+              <td>
+                {{data.vegetables}}
+              </td>
+              <td>
+                {{data.date}}
+              </td>
+              <td>
+                <div class="editable-row-operations">
+                  <ng-container *ngIf="!editCache[data.key].edit">
+                    <a (click)="startEdit(data.key)">编辑</a>
+                  </ng-container>
+                  <ng-container *ngIf="editCache[data.key].edit">
+                    <a (click)="saveEdit(data.key)">保存</a>
+                    <nz-popconfirm [nzTitle]="'Sure to cancel?'" (nzOnConfirm)="cancelEdit(data.key)">
+                      <a nz-popconfirm>取消</a>
+                    </nz-popconfirm>
+                  </ng-container>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </nz-tab>
+    <nz-tab nzTitle="下架任务">
+      <div class="downtable">
+        <p>
+          本日计划下架50个，已完成30个，剩余20个
+          <button class="add" nz-button nzType="primary">新增任务</button>
+          <button class="delete" nz-button nzType="danger">删除任务</button>
+        </p>
+        <nz-table #downTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
+          <thead>
+            <tr>
+              <th nzWidth="5%">序号</th>
+              <th nzWidth="10%">操作类型</th>
+              <th nzWidth="10%">架号</th>
+              <th nzWidth="10%">槽号</th>
+              <th nzWidth="10%">盘号</th>
+              <th nzWidth="10%">上架蔬菜</th>
+              <th nzWidth="10%">上架日期</th>
+              <th nzWidth="5%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of downTable.data;let i = index">
+              <td>
+                {{i+1}}
+              </td>
+              <td>
+                {{data.type}}
+              </td>
+              <td>
+                {{data.jiahao}}
+              </td>
+              <td>
+                {{data.caohao}}
+              </td>
+              <td>
+                {{data.panhao}}
+              </td>
+              <td>
+                {{data.vegetables}}
+              </td>
+              <td>
+                {{data.date}}
+              </td>
+              <td>
+                <div class="editable-row-operations">
+                  <ng-container *ngIf="!editCache[data.key].edit">
+                    <a (click)="startEdit(data.key)">编辑</a>
+                  </ng-container>
+                  <ng-container *ngIf="editCache[data.key].edit">
+                    <a (click)="saveEdit(data.key)">保存</a>
+                    <nz-popconfirm [nzTitle]="'Sure to cancel?'" (nzOnConfirm)="cancelEdit(data.key)">
+                      <a nz-popconfirm>取消</a>
+                    </nz-popconfirm>
+                  </ng-container>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>

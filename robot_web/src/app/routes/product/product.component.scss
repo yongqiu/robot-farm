@@ -1,5 +1,19 @@
-.uptable{
+.uptable,.downtable{
     height: 100%;
     width: 100%;
     padding: 20px;
+    p{
+        position: relative;
+    }
+    button{
+        position: absolute;
+        right: 0px;
+            top: -9px;
+    }
+    .add{
+        right: 100px;
+    }
 }
+// .card-container ::ng-deep .ant-tabs-card .ant-tabs-content {
+//     margin-top: -16px;
+// }
