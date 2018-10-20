@@ -1,0 +1,11 @@
+<div class="equipment-content">
+  <nz-radio-group [(ngModel)]="currentType">
+    <label nz-radio-button nzValue="position" (click)="routerTo()">地标管理</label>
+    <label nz-radio-button nzValue="frame" (click)="routerTo()">栽培架管理</label>
+    <label nz-radio-button nzValue="green" (click)="routerTo()">蔬菜管理</label>
+  </nz-radio-group>
+
+  <app-position-manage *ngIf="currentType == 'position'"></app-position-manage>
+  <app-green-manage  *ngIf="currentType == 'green'"></app-green-manage>
+  <app-frame-manage *ngIf="currentType == 'frame'"></app-frame-manage>
+</div>

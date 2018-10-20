@@ -1,0 +1,49 @@
+<div class="authority">
+  <div class="avgTable">
+    <button nz-button nzType="primary" (click)="roleModalView=true">创建用户</button>
+    <button nz-button nzType="primary">创建角色</button>
+    <nz-table #avgTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
+      <thead>
+        <tr>
+          <th nzWidth="5%">序号</th>
+          <th nzWidth="10%">用户角色</th>
+          <th nzWidth="10%">用户名</th>
+          <th nzWidth="10%">昵称</th>
+          <th nzWidth="8%">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of avgTable.data;let i = index">
+          <td>
+            {{data.index}}
+          </td>
+          <td>
+            {{data.role}}
+          </td>
+          <td>
+            {{data.username}}
+          </td>
+          <td>
+            {{data.nickname}}
+          </td>
+          <td>
+            <div class="editable-row-operations">
+              <a>编辑</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+
+<nz-modal [(nzVisible)]="roleModalView" nzTitle="创建角色" (nzOnCancel)="roleModalView = false" (nzOnOk)="roleModalView = false">
+  <div class="role-form">
+    <div class="row">
+      <input nz-input placeholder="请输入用户名" [(ngModel)]="rolename">
+    </div>
+    <nz-transfer [nzDataSource]="pointList" [nzTitles]="['权限列表', '角色权限']" (nzSelectChange)="select($event)" (nzChange)="change($event)">
+    </nz-transfer>
+  </div>
+</nz-modal>

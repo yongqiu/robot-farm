@@ -10,6 +10,7 @@
         <nz-table #upTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
           <thead>
             <tr>
+              <th nzWidth="5%"></th>
               <th nzWidth="5%">序号</th>
               <th nzWidth="10%">操作类型</th>
               <th nzWidth="10%">架号</th>
@@ -22,6 +23,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of upTable.data;let i = index">
+              <td nzShowCheckbox [(nzChecked)]="data.checked"></td>
               <td>
                 {{i+1}}
               </td>
@@ -71,6 +73,7 @@
         <nz-table #downTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
           <thead>
             <tr>
+              <th nzWidth="5%"></th>
               <th nzWidth="5%">序号</th>
               <th nzWidth="10%">操作类型</th>
               <th nzWidth="10%">架号</th>
@@ -83,6 +86,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of downTable.data;let i = index">
+              <td nzShowCheckbox [(nzChecked)]="data.checked"></td>
               <td>
                 {{i+1}}
               </td>

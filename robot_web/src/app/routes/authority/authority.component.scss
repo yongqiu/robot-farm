@@ -1,0 +1,11 @@
+// .role-form{
+//     background: red;
+    
+// }
+
+::ng-deep .role-form{
+    // height: 800px;
+    .ant-transfer-list{
+        height: 300px;
+    }
+}

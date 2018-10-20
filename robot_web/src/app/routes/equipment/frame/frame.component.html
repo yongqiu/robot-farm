@@ -1,0 +1,46 @@
+<div class="avgTable">
+  <nz-table #avgTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
+    <thead>
+      <tr>
+        <th nzWidth="5%">序号</th>
+        <th nzWidth="10%">蔬菜种类</th>
+        <th nzWidth="10%">上架时间</th>
+        <th nzWidth="10%">水轮电磁机开合</th>
+        <th nzWidth="10%">灌溉水电磁阀开合</th>
+        <th nzWidth="10%">栽培槽号</th>
+        <th nzWidth="20%">状态</th>
+        <th nzWidth="8%">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of avgTable.data;let i = index">
+        <td>
+          {{data.index}}
+        </td>
+        <td>
+          {{data.type}}
+        </td>
+        <td>
+          {{data.date}}
+        </td>
+        <td>
+          {{data.sljOpen}}
+        </td>
+        <td>
+          {{data.ggOpen}}
+        </td>
+        <td>
+          {{data.number}}次
+        </td>
+        <td>
+          {{data.status}}
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <a>编辑</a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

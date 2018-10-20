@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, Params, NavigationEnd } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
+// import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-layout',
@@ -8,12 +10,20 @@ import { Router } from '@angular/router';
 })
 export class LayoutComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    this.activatedRoute.params.subscribe((params:Params)=>{
+      console.log(params)
+    });
+  }
+
 
   ngOnInit() {
   }
-  routeTo(url:string){
-    this.router.navigate([url]);
-
+  routeTo(url?: string) {
+    if (url) {
+      this.router.navigate([url]);
+    } else {
+      // this.message.warning('该功能暂未开放')
+    }
   }
 }

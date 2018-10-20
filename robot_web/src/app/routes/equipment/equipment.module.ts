@@ -5,6 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
 import { AvgComponent } from './avg/avg.component';
+import { PlateComponent } from './plate/plate.component';
+import { RobotComponent } from './robot/robot.component';
+import { FrameComponent } from './frame/frame.component';
 
 @NgModule({
   imports: [
@@ -12,15 +15,9 @@ import { AvgComponent } from './avg/avg.component';
     FormsModule,
     NgZorroAntdModule,
     RouterModule.forChild([
-      {
-        path: '',
-        component: EquipmentComponent,
-        children: [
-          { path: 'avg', loadChildren: './avg/avg.module#AvgModule' }
-        ]
-      }
+      { path: ':type', component: EquipmentComponent }
     ]),
   ],
-  declarations: [EquipmentComponent]
+  declarations: [EquipmentComponent, AvgComponent, PlateComponent, RobotComponent, FrameComponent]
 })
 export class EquipmentModule { }

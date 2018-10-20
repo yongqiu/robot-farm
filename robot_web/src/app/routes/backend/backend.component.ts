@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 @Component({
-  selector: 'app-equipment',
-  templateUrl: './equipment.component.html',
-  styleUrls: ['./equipment.component.scss']
+  selector: 'app-backend',
+  templateUrl: './backend.component.html',
+  styleUrls: ['./backend.component.scss']
 })
-export class EquipmentComponent implements OnInit {
+export class BackendComponent implements OnInit {
   currentType: string = 'avg';
-  guidRouter: string = 'avg';
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {
     this.activatedRoute.params.subscribe((params: Params) => {
       let type = this.activatedRoute.snapshot.params['type'];
@@ -20,7 +19,7 @@ export class EquipmentComponent implements OnInit {
   }
 
   routerTo() {
-    this.router.navigate([`equipment/${this.currentType}`]);
+    this.router.navigate([`backend/${this.currentType}`]);
   }
 
 }

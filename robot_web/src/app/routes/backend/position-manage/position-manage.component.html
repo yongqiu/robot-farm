@@ -1,0 +1,34 @@
+<div class="avgTable">
+  <nz-table #avgTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
+    <thead>
+      <tr>
+        <th nzWidth="5%">序号</th>
+        <th nzWidth="10%">地标编号</th>
+        <th nzWidth="10%">栽培架</th>
+        <th nzWidth="10%">布局图显示点</th>
+        <th nzWidth="8%">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of avgTable.data;let i = index">
+        <td>
+          {{data.index}}
+        </td>
+        <td>
+          {{data.positionNum}}
+        </td>
+        <td>
+          {{data.frameNum}}
+        </td>
+        <td>
+          {{data.point}}
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <a>编辑</a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

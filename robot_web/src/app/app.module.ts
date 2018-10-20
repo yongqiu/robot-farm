@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
 
 registerLocaleData(zh);
 export const routes = [
-  // { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   {
     path: 'login',
@@ -23,9 +23,10 @@ export const routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: 'equipment', loadChildren: './routes/equipment/equipment.module#EquipmentModule' },
-      { path: 'product', loadChildren: './routes/product/product.module#ProductModule' },
-      
+      { path: 'equipment', loadChildren: './routes/equipment/equipment.module#EquipmentModule'},
+      { path: 'product', loadChildren: './routes/product/product.module#ProductModule'},
+      { path: 'backend', loadChildren: './routes/backend/backend.module#BackendModule'},
+      { path: 'authority', loadChildren: './routes/authority/authority.module#AuthorityModule'},
     ]
   },
   // {
@@ -40,7 +41,7 @@ export const routes = [
   //   path: 'select',
   //   children: [{ path: '', loadChildren: './routes/select/select.module#SelectModule' }]
   // }
-  // { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({

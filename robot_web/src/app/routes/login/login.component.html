@@ -2,10 +2,10 @@
   
   <div class="login-form">
       <h1>农场机器人</h1>
-    <nz-input-group [nzSuffix]="suffixTemplate" nzPrefixIcon="anticon anticon-user">
+    <nz-input-group nzPrefixIcon="anticon anticon-user">
       <input type="text" nz-input placeholder="Enter your username" [(ngModel)]="username">
     </nz-input-group>
-    <nz-input-group [nzSuffix]="suffixTemplate" nzPrefixIcon="anticon anticon-lock">
+    <nz-input-group nzPrefixIcon="anticon anticon-lock">
       <input type="password" nz-input placeholder="Enter your password" [(ngModel)]="password">
     </nz-input-group>
     <button (click)="routeTo()" nz-button nzType="primary" nzBlock>登录</button>

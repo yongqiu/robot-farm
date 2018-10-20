@@ -1,0 +1,38 @@
+<div class="avgTable">
+  <nz-table #avgTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
+    <thead>
+      <tr>
+        <th nzWidth="5%">序号</th>
+        <th nzWidth="10%">电量</th>
+        <th nzWidth="10%">报警</th>
+        <th nzWidth="10%">运行速度</th>
+        <th nzWidth="10%">状态</th>
+        <th nzWidth="8%">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of avgTable.data;let i = index">
+        <td>
+          {{data.index}}
+        </td>
+        <td>
+          {{data.quantity}}
+        </td>
+        <td>
+          {{data.warning}}
+        </td>
+        <td>
+          {{data.status}}
+        </td>
+        <td>
+          {{data.speed}}
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <a>编辑</a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

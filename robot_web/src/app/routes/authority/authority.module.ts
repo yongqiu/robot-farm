@@ -1,19 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthorityComponent } from './authority.component';
 import { FormsModule } from '@angular/forms';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
-import { AvgComponent } from './avg.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     NgZorroAntdModule,
-    RouterModule.forChild([
-      { path: '', component: AvgComponent }
-    ]),
+    RouterModule.forChild([{ path: '', component: AuthorityComponent }]),
   ],
-  declarations: [AvgComponent]
+  declarations: [AuthorityComponent]
 })
-export class AvgModule { }
+export class AuthorityModule { }

@@ -2,15 +2,15 @@
   <!-- <li nz-menu-item (click)="routeToQQmusic()"><i class="anticon anticon-mail"></i>数字专辑</li> -->
   <!-- <li nz-menu-item (click)="routeToTable()"><i class="anticon anticon-mail"></i>数据</li> -->
   <!-- <li nz-menu-item (click)="routeToCharts()"><i class="anticon anticon-pie-chart"></i>图表</li> -->
-  <li nz-menu-item (click)="routeToHot()">
+  <li nz-menu-item (click)="routeTo()">
     <i class="anticon anticon-rocket"></i>主页</li>
   <li nz-menu-item (click)="routeTo('product')">
     <i class="anticon anticon-rocket"></i>生产管理
   </li>
-  <li nz-menu-item (click)="routeTo('equipment')">
+  <li nz-menu-item (click)="routeTo('equipment/avg')">
     <i class="anticon anticon-rocket"></i>设备检测
   </li>
-  <li nz-menu-item (click)="routeToHot()">
+  <li nz-menu-item (click)="routeTo()">
     <i class="anticon anticon-rocket"></i>设备调度
   </li>
   <li nz-submenu>
@@ -19,10 +19,9 @@
     <ul>
       <li nz-menu-group>
         <ul>
-          <li nz-menu-item>蔬菜种类管理</li>
-          <li nz-menu-item>栽培架管理</li>
-          <li nz-menu-item>地标管理</li>
-          <li nz-menu-item>地标布局管理</li>
+          <li nz-menu-item (click)="routeTo('backend/position')">地标管理</li>
+          <li nz-menu-item (click)="routeTo('backend/frame')">栽培架管理</li>
+          <li nz-menu-item (click)="routeTo('backend/green')">蔬菜管理</li>
           <li nz-menu-item>权限管理</li>
         </ul>
       </li>

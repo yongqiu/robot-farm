@@ -1,0 +1,50 @@
+<div class="avgTable">
+  <nz-table #avgTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
+    <thead>
+      <tr>
+        <th nzWidth="5%">序号</th>
+        <th nzWidth="10%">栽培架编号</th>
+        <th nzWidth="10%">纵列值</th>
+        <th nzWidth="10%">向低纵间距</th>
+        <th nzWidth="10%">向高纵间距</th>
+        <th nzWidth="10%">横列值</th>
+        <th nzWidth="10%">向低横间距</th>
+        <th nzWidth="10%">向高横间距</th>
+        <th nzWidth="8%">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of avgTable.data;let i = index">
+        <td>
+          {{data.index}}
+        </td>
+        <td>
+          {{data.number}}
+        </td>
+        <td>
+          {{data.colVal}}
+        </td>
+        <td>
+          {{data.colLow}}
+        </td>
+        <td>
+          {{data.colHigh}}
+        </td>
+        <td>
+          {{data.rowVal}}
+        </td>
+        <td>
+          {{data.rowLow}}
+        </td>
+        <td>
+          {{data.rowHigh}}
+        </td>
+        <td>
+          <div class="editable-row-operations">
+            <a>编辑</a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
