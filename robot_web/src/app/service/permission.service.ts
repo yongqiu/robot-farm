@@ -11,10 +11,10 @@ export class PermissionService {
   }
 
   async getRoleList() {
-    return await this.reqSev.queryServer({ url: '/api/robot/authorData', method: 'get' }, {})
+    return await this.reqSev.queryServer({ url: '/api/robot/roleData', method: 'get' }, {})
   }
 
   async postRole(param){
-    return await this.reqSev.queryServer({ url: '/api/robot/authorData', method: 'post' }, param)
+    return await this.reqSev.queryServer({ url: '/api/robot/roleData', method: 'post' }, param)
   }
 }

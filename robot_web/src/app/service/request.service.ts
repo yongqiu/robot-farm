@@ -75,7 +75,8 @@ export class RequestService {
       }
       case 'delete': {
         const form = this.createRequstParam(param);
-        return this.http.delete(query.url, { search: form, headers: this.createHeaders(headers), responseType: ResponseContentType.Blob }).toPromise();
+        return this.http.delete(query.url, { search: form, headers: this.createHeaders(headers) }).toPromise()
+          .then(this.checkResponeCode.bind(this)).catch(this.handleError);
       }
     }
   }
