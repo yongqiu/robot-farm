@@ -4,7 +4,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var robot = require('./routes/api_robot');
 
 var app = express();
 var server = require('http').Server(app);
@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/api/robot', robot); // robot的api路由
 
 // app.set('port', 3000);
 //Server's IP address
@@ -64,6 +64,10 @@ io.on("connection", function (socket) {
  */
 
 //Start the http server at port and IP defined before
-server.listen(3000);
+server.listen(3000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Example app listening at http://%s:%s', host, port);
+});
 
 // module.exports = {app: app, server: server};
