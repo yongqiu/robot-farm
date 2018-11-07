@@ -13,6 +13,8 @@ import { RouterModule } from '@angular/router';
 import { PermissionService } from './service/permission.service';
 import { RequestService } from './service/request.service';
 import { Http, HttpModule } from '@angular/http';
+import { CanAuthProvide } from './service/guard/can-auth.provide';
+import { RobotPipeModule } from './common/pipe/robot-pipe.module';
 
 registerLocaleData(zh);
 export const routes = [
@@ -25,6 +27,7 @@ export const routes = [
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [CanAuthProvide],
     children: [
       { path: 'equipment', loadChildren: './routes/equipment/equipment.module#EquipmentModule' },
       { path: 'product', loadChildren: './routes/product/product.module#ProductModule' },
@@ -58,10 +61,11 @@ export const routes = [
     FormsModule,
     HttpModule,
     HttpClientModule,
+    RobotPipeModule,
     NgZorroAntdModule.forRoot(),
     RouterModule.forRoot(routes)
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }, PermissionService, RequestService],
+  providers: [{ provide: NZ_I18N, useValue: zh_CN }, PermissionService, RequestService, CanAuthProvide],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

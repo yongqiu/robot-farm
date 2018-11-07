@@ -3,6 +3,7 @@ import { PermissionService } from '../../service/permission.service';
 import { AuthorConfig } from '../../config';
 import { RequestService } from '../../service/request.service';
 import { NzMessageService } from 'ng-zorro-antd';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-authority',
@@ -128,6 +129,7 @@ export class AuthorityComponent implements OnInit {
       this.roleData.permission[index].val = true;
     });
     this.roleData.roleName = role.roleName;
+    this.roleData.id = role.id;
     this.roleModalView = true;
   }
 
@@ -177,7 +179,7 @@ export class AuthorityComponent implements OnInit {
         password: element.password,
         roleName: element.roleName,
         id: element.id,
-        createdAt: element.createdAt
+        createdAt: moment.unix(element.createdAt).format("YYYY-MM-DD")
       })
     });
     console.log(this.userList)

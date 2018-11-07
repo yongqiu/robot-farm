@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params, NavigationEnd } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';
+import { PermissionService } from '../../service/permission.service';
 // import { filter } from 'rxjs/operators';
 
 @Component({
@@ -10,8 +11,8 @@ import { NzMessageService } from 'ng-zorro-antd';
 })
 export class LayoutComponent implements OnInit {
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    this.activatedRoute.params.subscribe((params:Params)=>{
+  constructor(public pms: PermissionService, private router: Router, private activatedRoute: ActivatedRoute) {
+    this.activatedRoute.params.subscribe((params: Params) => {
       console.log(params)
     });
   }
@@ -25,5 +26,10 @@ export class LayoutComponent implements OnInit {
     } else {
       // this.message.warning('该功能暂未开放')
     }
+  }
+
+  logout() {
+    this.router.navigate(['login']);
+    localStorage.removeItem('roleInfo')
   }
 }

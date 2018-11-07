@@ -1,3 +1,14 @@
+.menu{
+    position: relative;
+    .logout{
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        width: 48px;
+        cursor: pointer;
+    }
+}
 .content{
     padding: 20px;
     position: absolute;

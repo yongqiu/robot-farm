@@ -1,33 +1,36 @@
-<ul nz-menu [nzMode]="'horizontal'" class="header">
-  <!-- <li nz-menu-item (click)="routeToQQmusic()"><i class="anticon anticon-mail"></i>数字专辑</li> -->
-  <!-- <li nz-menu-item (click)="routeToTable()"><i class="anticon anticon-mail"></i>数据</li> -->
-  <!-- <li nz-menu-item (click)="routeToCharts()"><i class="anticon anticon-pie-chart"></i>图表</li> -->
-  <li nz-menu-item (click)="routeTo()">
-    <i class="anticon anticon-rocket"></i>主页</li>
-  <li nz-menu-item (click)="routeTo('product')">
-    <i class="anticon anticon-rocket"></i>生产管理
-  </li>
-  <li nz-menu-item (click)="routeTo('equipment/avg')">
-    <i class="anticon anticon-rocket"></i>设备检测
-  </li>
-  <li nz-menu-item (click)="routeTo()">
-    <i class="anticon anticon-rocket"></i>设备调度
-  </li>
-  <li nz-submenu>
-    <span title>
-      <i class="anticon anticon-notification"></i>后台管理</span>
-    <ul>
-      <li nz-menu-group>
-        <ul>
-          <li nz-menu-item (click)="routeTo('backend/position')">地标管理</li>
-          <li nz-menu-item (click)="routeTo('backend/frame')">栽培架管理</li>
-          <li nz-menu-item (click)="routeTo('backend/green')">蔬菜管理</li>
-          <li nz-menu-item>权限管理</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
+<div class="menu">
+  <ul nz-menu [nzMode]="'horizontal'" class="header">
+    <!-- <li nz-menu-item (click)="routeToQQmusic()"><i class="anticon anticon-mail"></i>数字专辑</li> -->
+    <!-- <li nz-menu-item (click)="routeToTable()"><i class="anticon anticon-mail"></i>数据</li> -->
+    <!-- <li nz-menu-item (click)="routeToCharts()"><i class="anticon anticon-pie-chart"></i>图表</li> -->
+    <li nz-menu-item (click)="routeTo()">
+      <i class="anticon anticon-rocket"></i>主页</li>
+    <li *ngIf="pms.canMenu(1)" nz-menu-item (click)="routeTo('product')">
+      <i class="anticon anticon-rocket"></i>生产管理
+    </li>
+    <li *ngIf="pms.canMenu(2)" nz-menu-item (click)="routeTo('equipment/avg')">
+      <i class="anticon anticon-rocket"></i>设备检测
+    </li>
+    <li *ngIf="pms.canMenu(7)" nz-menu-item (click)="routeTo()">
+      <i class="anticon anticon-rocket"></i>设备调度
+    </li>
+    <li nz-submenu>
+      <span title>
+        <i class="anticon anticon-notification"></i>后台管理</span>
+      <ul>
+        <li nz-menu-group>
+          <ul>
+            <li *ngIf="pms.canMenu(3)" nz-menu-item (click)="routeTo('backend/position')">地标管理</li>
+            <li *ngIf="pms.canMenu(6)" nz-menu-item (click)="routeTo('backend/frame')">栽培架管理</li>
+            <li *ngIf="pms.canMenu(4)" nz-menu-item (click)="routeTo('backend/green')">蔬菜管理</li>
+            <li *ngIf="pms.canMenu(5)" nz-menu-item (click)="routeTo('authority')">权限管理</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <span class="logout" (click)="logout()">退出  <i class="anticon anticon-logout"></i></span>
+</div>
 <div class="content" #content>
   <div class="scroll-panel">
     <router-outlet></router-outlet>

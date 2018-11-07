@@ -6,6 +6,11 @@ import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
+  console.log('Welcome to robot');
+  window.console.log = function () { };
+  window.console.info = function () { };
+} else {
+  console.log('The environment is devlopment');
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
