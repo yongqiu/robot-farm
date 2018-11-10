@@ -5,6 +5,17 @@ module.exports = {
         password: 'wyq#120921',
         database: 'robot', // 前面建的user表位于这个数据库中 
         port: 3306
+    },
+    development: {
+        "username": "root",
+        "password": "wyq#120921",
+        "database": "robot",
+        "host": "39.105.149.189",
+        "port": 3306,
+        "dialect": "postgres"
+    },
+    aaa:{
+        "fdsaf":"fdsafd"
     }
 };
 // module.exports = {

@@ -7,7 +7,7 @@ var router = express.Router();
 var { r_role, r_user } = require('../sql/r_user');
 
 // 数据库
-var dbConfig = require('../config/dbconfig');
+var dbConfig = require('../../config/dbconfig');
 var mysql = require('mysql');
 var pool = mysql.createPool(dbConfig.mysql);
 

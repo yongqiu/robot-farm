@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PermissionService } from '../../service/permission.service';
+import { PermissionService } from '../../service/permission/permission.service';
 import { AuthorConfig } from '../../config';
-import { RequestService } from '../../service/request.service';
+import { RequestService } from '../../service/permission/request.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as moment from 'moment';
 

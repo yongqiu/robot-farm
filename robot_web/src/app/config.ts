@@ -7,3 +7,5 @@ export const AuthorConfig: any = {
   6: '栽培架管理',
   7: '设备调度'
 };
+
+export const SOCKET_URL = 'http://127.0.0.1:3000'

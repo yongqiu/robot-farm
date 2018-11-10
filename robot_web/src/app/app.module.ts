@@ -10,11 +10,12 @@ import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { LayoutComponent } from './routes/layout/layout.component';
 import { RouterModule } from '@angular/router';
-import { PermissionService } from './service/permission.service';
-import { RequestService } from './service/request.service';
+import { PermissionService } from './service/permission/permission.service';
+import { RequestService } from './service/permission/request.service';
 import { Http, HttpModule } from '@angular/http';
 import { CanAuthProvide } from './service/guard/can-auth.provide';
 import { RobotPipeModule } from './common/pipe/robot-pipe.module';
+import { SocketService } from './service/socket/socket.service';
 
 registerLocaleData(zh);
 export const routes = [
@@ -33,6 +34,7 @@ export const routes = [
       { path: 'product', loadChildren: './routes/product/product.module#ProductModule' },
       { path: 'backend', loadChildren: './routes/backend/backend.module#BackendModule' },
       { path: 'authority', loadChildren: './routes/authority/authority.module#AuthorityModule' },
+      { path: 'avgmanagement', loadChildren: './routes/agv-management/agv-management.module#AgvManagementModule' },
     ]
   },
   // {
@@ -65,7 +67,7 @@ export const routes = [
     NgZorroAntdModule.forRoot(),
     RouterModule.forRoot(routes)
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }, PermissionService, RequestService, CanAuthProvide],
+  providers: [{ provide: NZ_I18N, useValue: zh_CN }, PermissionService, RequestService, CanAuthProvide, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

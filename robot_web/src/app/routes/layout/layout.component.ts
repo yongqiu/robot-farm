@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, Params, NavigationEnd } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';
-import { PermissionService } from '../../service/permission.service';
+import { PermissionService } from '../../service/permission/permission.service';
 // import { filter } from 'rxjs/operators';
 
 @Component({

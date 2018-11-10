@@ -3,9 +3,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var robot = require('./routes/api_robot');
-
+// var routes = require('./routes/index');
+// var robot = require('./routes/api_robot');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -20,7 +19,7 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 //设置模板文件存放的目录，第一个参数必须是views
 //第二个参数是路径目录
-app.set('views', './views');
+app.set('views', './app/views');
 
 // uncomment after placing your favicon in /public
 // //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -36,13 +35,13 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/api/robot', robot); // robot的api路由
+// app.use('/', routes);
+// app.use('/api/robot', robot); // robot的api路由
 
 // app.set('port', 3000);
 //Server's IP address
 app.set("ipaddr", "127.0.0.1");
-
+require('./app/router')(app)
 //Server's port number
 app.set("port", 3000);
 var participants = [];

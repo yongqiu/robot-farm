@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start-wyq": "ng serve --host 172.16.4.50 --port 8888 --proxy-config proxy.config.json",
+    "start-wyq": "ng serve --host 172.16.4.50 --port 8888 --proxy-config proxy.config.json ",
     "start-mac": "ng serve --host 192.168.3.3 --port 8888 --proxy-config proxy.config.json",
     "build": "ng build --prod --base-href /view",
     "test": "ng test",
@@ -22,6 +22,7 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
+    "@types/socket.io-client": "^1.4.32",
     "core-js": "^2.5.4",
     "moment": "^2.22.2",
     "ng-zorro-antd": "^1.6.0",
