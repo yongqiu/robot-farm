@@ -57,10 +57,10 @@ export class AuthorityComponent implements OnInit {
 
   }
   async getRoleList() {
-    let res = await this.reqSev.queryServer({ url: '/api/robot/roleData', method: 'get' }, {})
+    let res = await this.permisServ.getRoleList();
     console.log(res)
     this.roleList = []
-    res.msg.forEach(element => {
+    res.data.forEach(element => {
       let roles = [];
       JSON.parse(element.roleInfo).forEach(point => {
         roles.push(AuthorConfig[point])
@@ -91,13 +91,15 @@ export class AuthorityComponent implements OnInit {
     let param = {
       roleName: this.roleData.roleName,
       roleInfo: JSON.stringify(newArray),
-      id: null
     }
+    let res;
     if (this.roleData.id) {
-      param.id = this.roleData.id
+      param['id'] = this.roleData.id;
+      res = await this.permisServ.updateRole(param);
+    } else {
+      res = await this.permisServ.createRole(param);
     }
-    let res = await this.permisServ.postRole(param)
-    if (res.code == 200) {
+    if (res.success) {
       this.message.success('提交成功')
       this.getRoleList()
       this.roleModalView = false;
@@ -112,8 +114,8 @@ export class AuthorityComponent implements OnInit {
   }
 
   async deleteRole(id) {
-    let res = await this.reqSev.queryServer({ url: '/api/robot/roleData', method: 'delete' }, { id: id })
-    if (res.code == 200) {
+    let res = await this.permisServ.deleteRole(id)
+    if (res.success) {
       this.message.success('删除成功')
       this.getRoleList()
     }
@@ -154,15 +156,17 @@ export class AuthorityComponent implements OnInit {
 
   async submitUser() {
     console.log(this.userData)
-    let param = {
+    let param = new Object({
       userName: this.userData.userName,
       password: this.userData.password,
-      roleId: this.userData.roleId,
-      id: this.userData.id? this.userData.id: null
+      roleId: this.userData.roleId
+    })
+    if (this.userData.id) {
+      param['id'] = this.userData.id
     }
-    let res = await this.reqSev.queryServer({ url: '/api/robot/userData', method: 'post' }, param)
+    let res = await this.permisServ.createUser(param)
     console.log(param)
-    if (res.code == 200) {
+    if (res.success) {
       this.message.success('提交成功')
       this.getUserList()
       this.userModalView = false;
@@ -170,14 +174,14 @@ export class AuthorityComponent implements OnInit {
   }
 
   async getUserList() {
-    let res = await this.reqSev.queryServer({ url: '/api/robot/userData', method: 'get' }, {})
+    let res = await this.permisServ.getUserList();
     console.log(res)
     this.userList = []
-    res.msg.forEach(element => {
+    res.data.forEach(element => {
       this.userList.push({
         userName: element.userName,
         password: element.password,
-        roleName: element.roleName,
+        roleName: element.r_role.roleName,
         id: element.id,
         createdAt: moment.unix(element.createdAt).format("YYYY-MM-DD")
       })
@@ -186,8 +190,8 @@ export class AuthorityComponent implements OnInit {
   }
 
   async deleteUser(id) {
-    let res = await this.reqSev.queryServer({ url: '/api/robot/userData', method: 'delete' }, { id: id })
-    if (res.code == 200) {
+    let res = await this.permisServ.deleteUser(id);
+    if (res.success) {
       this.message.success('删除成功')
       this.getUserList()
     }
@@ -195,8 +199,8 @@ export class AuthorityComponent implements OnInit {
 
   async editUser(user) {
     console.log(user)
-    let res = await this.reqSev.queryServer({ url: '/api/robot/userData', method: 'get' }, { id: user.id })
-    let data = res.msg[0]
+    let res = await this.permisServ.getUserById(user.id)
+    let data = res.data;
     console.log(data)
     this.userData = {
       userName: data.userName,

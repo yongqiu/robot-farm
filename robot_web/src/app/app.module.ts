@@ -34,7 +34,7 @@ export const routes = [
       { path: 'product', loadChildren: './routes/product/product.module#ProductModule' },
       { path: 'backend', loadChildren: './routes/backend/backend.module#BackendModule' },
       { path: 'authority', loadChildren: './routes/authority/authority.module#AuthorityModule' },
-      { path: 'avgmanagement', loadChildren: './routes/agv-management/agv-management.module#AgvManagementModule' },
+      { path: 'avgManage', loadChildren: './routes/agv-management/agv-management.module#AgvManagementModule' },
     ]
   },
   // {

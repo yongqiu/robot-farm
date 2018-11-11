@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SocketService } from 'src/app/service/socket/socket.service';
+import { SocketService, AgvModel } from 'src/app/service/socket/socket.service';
+
 
 @Component({
   selector: 'app-agv-management',
@@ -7,11 +8,11 @@ import { SocketService } from 'src/app/service/socket/socket.service';
   styleUrls: ['./agv-management.component.scss']
 })
 export class AgvManagementComponent implements OnInit {
-
-  constructor(private socketServ: SocketService) { }
+  private socket: any;
+  constructor(public socketServ: SocketService) { }
 
   ngOnInit() {
-    this.socketServ.initSocket()
+    this.socketServ.initSocket();
   }
 
 }

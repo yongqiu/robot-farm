@@ -1,6 +1,4 @@
 var express = require('express');
-var router = express.Router();
-var app = express();
 const r_role = require('../models').r_role;
 
 module.exports = {
@@ -15,14 +13,15 @@ module.exports = {
     req.io.sockets.emit("connect", { message: 'socket connect success' });
     res.render('index', { title: 'Express' });
   },
-  roleTest(req, res) {
-    console.log(r_role)
-    return r_role
-      .findAll()
-      .then(roleItem => {
-        res.status(200).json({ data: roleItem })
-      })
-      .catch(error => res.status(400).send(error));
+  async roleTest(req, res) {
+    let roles = await r_role.findAll();
+    res.status(200).json({ data: roles })
+    // return r_role
+    //   .findAll()
+    //   .then(roleItem => {
+    //     res.status(200).json({ data: roleItem })
+    //   })
+    //   .catch(error => res.status(400).send(error));
   }
 };
 

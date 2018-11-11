@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true
+            primaryKey: true,
+            autoIncrement: true
         },
         roleInfo: {
             type: DataTypes.STRING,
@@ -11,24 +12,26 @@ module.exports = (sequelize, DataTypes) => {
         },
         roleName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notEmpty: { msg: "You must enter roleInfo" }
+            }
         },
         status: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         },
         createdAt: {
-            type: DataTypes.INTEGER,
-            allowNull: false
+            type: DataTypes.INTEGER
+        },
+        updatedAt: {
+            type: DataTypes.INTEGER
         }
     });
 
-    // TodoItem.associate = (models) => {
-    //     TodoItem.belongsTo(models.Todo, {
-    //         foreignKey: 'todoId',
-    //         onDelete: 'CASCADE',
-    //     });
-    // };
+    r_role.associate = (models) => {
+        r_role.hasOne(models.r_user, { foreignKey: 'role' });
+    };
 
     return r_role;
 };

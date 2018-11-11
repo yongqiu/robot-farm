@@ -4,9 +4,6 @@ const Sequelize = require('sequelize');
 const basename = path.basename(module.filename);
 const env = 'development';
 const config = require(`${__dirname}/../../config/dbconfig`)[env];
-console.log(env)
-console.log(process.env.NODE_ENV)
-console.log(config[process.env.NODE_ENV.toString()])
 const db = {};
 
 
@@ -19,8 +16,12 @@ sequelize = new Sequelize(config.database, config.username, config.password, {
         min: 0,
         idle: 30000
     },
+    operatorsAliases: false, // 消除warning ：https://github.com/sequelize/sequelize/issues/8417
     define: {
-        freezeTableName: true
+        freezeTableName: true,
+        timestamps: true,
+        updatedAt: false,
+        createdAt: false
     }
 });
 
