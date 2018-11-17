@@ -1,11 +1,13 @@
 var express = require('express');
 const r_agvInfo = require('../models').r_agvInfo;
+const ERROR = require('../../config/errorCode')
 
 module.exports = {
   async sendAgvInfo(req, res) {
     // console.log(req.body)
     // var message = req.body.message;
     // var name = req.body.name;
+    console.log(req.body)
     let date = Date.parse(new Date()) / 1000;
     let status = await r_agvInfo.create({
       AgvName: req.body.AgvName,
@@ -20,7 +22,7 @@ module.exports = {
       RunTimes: req.body.RunTimes,
       createdAt: date
     }).catch(error => res.status(ERROR.BaseError).send(error));
-    
+
     req.io.sockets.emit("getAgvInfo", { success: true, type: 1, data: req.body });
     res.status(200).send({ success: true, data: status });
   },
