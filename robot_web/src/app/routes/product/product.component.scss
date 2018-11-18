@@ -14,6 +14,15 @@
         right: 100px;
     }
 }
+
+::ng-deep .createTask{
+    .row{
+        margin-bottom: 20px;
+        .ant-select{
+            width: 200px;
+        }
+    }
+}
 // .card-container ::ng-deep .ant-tabs-card .ant-tabs-content {
 //     margin-top: -16px;
 // }

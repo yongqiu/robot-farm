@@ -3,64 +3,61 @@
     <nz-tab nzTitle="上架任务">
       <div class="uptable">
         <p>
-          本日计划上架50个，已完成30个，剩余20个
-          <button class="add" nz-button nzType="primary">新增任务</button>
+          <button class="add" nz-button nzType="primary" (click)="create()">新增任务</button>
           <button class="delete" nz-button nzType="danger">删除任务</button>
         </p>
-        <nz-table #upTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
-          <thead>
-            <tr>
-              <th nzWidth="5%"></th>
-              <th nzWidth="5%">序号</th>
-              <th nzWidth="10%">操作类型</th>
-              <th nzWidth="10%">架号</th>
-              <th nzWidth="10%">槽号</th>
-              <th nzWidth="10%">盘号</th>
-              <th nzWidth="10%">上架蔬菜</th>
-              <th nzWidth="10%">上架日期</th>
-              <th nzWidth="5%">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of upTable.data;let i = index">
-              <td nzShowCheckbox [(nzChecked)]="data.checked"></td>
-              <td>
-                {{i+1}}
-              </td>
-              <td>
-                {{data.type}}
-              </td>
-              <td>
-                {{data.jiahao}}
-              </td>
-              <td>
-                {{data.caohao}}
-              </td>
-              <td>
-                {{data.panhao}}
-              </td>
-              <td>
-                {{data.vegetables}}
-              </td>
-              <td>
-                {{data.date}}
-              </td>
-              <td>
-                <div class="editable-row-operations">
-                  <ng-container *ngIf="!editCache[data.key].edit">
-                    <a (click)="startEdit(data.key)">编辑</a>
-                  </ng-container>
-                  <ng-container *ngIf="editCache[data.key].edit">
-                    <a (click)="saveEdit(data.key)">保存</a>
-                    <nz-popconfirm [nzTitle]="'Sure to cancel?'" (nzOnConfirm)="cancelEdit(data.key)">
-                      <a nz-popconfirm>取消</a>
-                    </nz-popconfirm>
-                  </ng-container>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
+        <div nz-row>
+          <div nz-col nzSpan="18">
+            <div class="table-panel">
+              <nz-table #upTable nzBordered [nzData]="taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
+                <thead>
+                  <tr>
+                    <th nzWidth="50px" nzLeft="0px"></th>
+                    <th nzWidth="100px">序号</th>
+                    <th nzWidth="100px">操作类型</th>
+                    <th nzWidth="100px">架号</th>
+                    <th nzWidth="100px">槽号</th>
+                    <th nzWidth="100px">上架蔬菜</th>
+                    <th nzWidth="200px">上架日期</th>
+                    <th nzWidth="100px" nzRight="0px">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of upTable.data;let i = index">
+                    <td nzShowCheckbox [(nzChecked)]="data.checked" nzLeft="0px"></td>
+                    <td>
+                      {{i+1}}
+                    </td>
+                    <td>
+                      {{data.type |taskPipe:'type'}}
+                    </td>
+                    <td>
+                      {{data.frameNumber}}
+                    </td>
+                    <td>
+                      {{data.gutterNumber}}
+                    </td>
+                    <td>
+                      {{data.vegetable}}
+                    </td>
+                    <td>
+                      {{data.createdAt | dateTimePipe:'unix'}}
+                    </td>
+                    <td nzRight="0px">
+                      <div>
+                        <a (click)="editTask(data)">编辑</a>
+                        <a (click)="saveEdit(data.key)">保存</a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </div>
+          </div>
+          <div nz-col nzSpan="6">col-12</div>
+        </div>
+
+
       </div>
     </nz-tab>
     <nz-tab nzTitle="下架任务">
@@ -78,7 +75,6 @@
               <th nzWidth="10%">操作类型</th>
               <th nzWidth="10%">架号</th>
               <th nzWidth="10%">槽号</th>
-              <th nzWidth="10%">盘号</th>
               <th nzWidth="10%">上架蔬菜</th>
               <th nzWidth="10%">上架日期</th>
               <th nzWidth="5%">操作</th>
@@ -94,31 +90,21 @@
                 {{data.type}}
               </td>
               <td>
-                {{data.jiahao}}
+                {{data.frameNumber}}
               </td>
               <td>
-                {{data.caohao}}
+                {{data.gutter}}
               </td>
               <td>
-                {{data.panhao}}
+                {{data.vegetable}}
               </td>
               <td>
-                {{data.vegetables}}
+                {{data.createdAt}}
               </td>
               <td>
-                {{data.date}}
-              </td>
-              <td>
-                <div class="editable-row-operations">
-                  <ng-container *ngIf="!editCache[data.key].edit">
-                    <a (click)="startEdit(data.key)">编辑</a>
-                  </ng-container>
-                  <ng-container *ngIf="editCache[data.key].edit">
-                    <a (click)="saveEdit(data.key)">保存</a>
-                    <nz-popconfirm [nzTitle]="'Sure to cancel?'" (nzOnConfirm)="cancelEdit(data.key)">
-                      <a nz-popconfirm>取消</a>
-                    </nz-popconfirm>
-                  </ng-container>
+                <div>
+                  <a (click)="startEdit(data.key)">编辑</a>
+                  <a (click)="saveEdit(data.key)">保存</a>
                 </div>
               </td>
             </tr>
@@ -128,3 +114,39 @@
     </nz-tab>
   </nz-tabset>
 </div>
+
+<nz-modal [(nzVisible)]="createTaskView" nzTitle="任务" (nzOnCancel)="createTaskView = false" (nzOnOk)="submit()">
+  <div class="createTask" *ngIf="taskForm">
+    <div class="row">
+      <nz-radio-group [(ngModel)]="taskForm.type">
+        <label nz-radio [nzValue]="1">正常任务</label>
+        <label nz-radio [nzValue]="2">单盘任务</label>
+      </nz-radio-group>
+    </div>
+    <div class="row">
+      <nz-radio-group [(ngModel)]="taskForm.direction">
+        <label nz-radio [nzValue]="1">上架任务</label>
+        <label nz-radio [nzValue]="2">下架任务</label>
+      </nz-radio-group>
+    </div>
+    <div class="row">
+      <p class="title">选择栽培架</p>
+      <nz-select style="width: 120px;" [(ngModel)]="taskForm.frameNumber" nzAllowClear nzPlaceHolder="选择栽培架">
+        <nz-option *ngFor="let frame of frameList;" [nzValue]="frame" [nzLabel]="frame"></nz-option>
+      </nz-select>
+    </div>
+    <div class="row">
+      <p class="title">选择槽号</p>
+      <nz-select style="width: 120px;" [(ngModel)]="taskForm.gutterNumber" nzAllowClear nzPlaceHolder="选择槽号">
+        <nz-option *ngFor="let gutter of gutterList;" [nzValue]="gutter" [nzLabel]="gutter"></nz-option>
+      </nz-select>
+    </div>
+    <div class="row">
+      <p class="title">选择蔬菜</p>
+      <nz-select style="width: 120px;" [(ngModel)]="taskForm.vegetable" nzAllowClear nzPlaceHolder="选择蔬菜">
+        <nz-option *ngFor="let vegetable of vegetableList;let i = index;" [nzValue]="vegetable" [nzLabel]="vegetable"></nz-option>
+      </nz-select>
+    </div>
+
+  </div>
+</nz-modal>

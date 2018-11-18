@@ -1,6 +1,7 @@
 const socketTest = require('./controller/test.js');
 const USER = require('./controller/user');
 const AGV = require('./controller/agvInfo');
+const MOVE = require('./controller/action_move');
 const TASK = require('./controller/task');
 
 module.exports = (app) => {
@@ -24,6 +25,11 @@ module.exports = (app) => {
     //agv
     app.post('/api/GetAllAgvInfo', AGV.sendAgvInfo);
     app.get('/api/getAgvbyName', AGV.findByAgvName);
+    // move
+    // app.post('/api/PostTask', MOVE.create);
+    // app.get('/api/GetAllTask', MOVE.getList);
+    // app.post('/api/UpdateTask', MOVE.update);
+    // app.get('/api/PostTask', MOVE.getTaskByID);
     // task
     app.post('/api/PostTask', TASK.create);
     app.get('/api/GetAllTask', TASK.getList);

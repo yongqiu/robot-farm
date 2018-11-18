@@ -1,47 +1,54 @@
 module.exports = (sequelize, DataTypes) => {
-    const r_task = sequelize.define('r_task', {
-        TaskID: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        TaskType: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        AGVName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: { msg: "You must enter AGVName" }
-            }
-        },
-        SourcePort: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: { msg: "You must enter SourcePort" }
-            }
-        },
-        DestPort: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: { msg: "You must enter SourcePort" }
-            }
-        },
-        IsRead: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        createdAt: {
-            type: DataTypes.INTEGER
-        },
-        updatedAt: {
-            type: DataTypes.INTEGER
-        }
-    });
+  const r_task = sequelize.define('r_task', {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    type: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    frameNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "You must enter frameNumber" }
+      }
+    },
+    gutterNumber: {
+      type: DataTypes.STRING(50),
+    },
+    plateNumber: {
+      type: DataTypes.STRING(50),
+    },
+    vegetable: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "You must enter vegetable" }
+      }
+    },
+    direction: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    createdAt: {
+      type: DataTypes.INTEGER
+    },
+    updatedAt: {
+      type: DataTypes.INTEGER
+    }
+  });
 
-    return r_task;
+  r_task.associate = (models) => {
+    r_task.hasOne(models.r_user, { foreignKey: 'role' });
+  };
+
+  return r_task;
 };

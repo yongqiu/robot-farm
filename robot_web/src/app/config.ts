@@ -8,4 +8,12 @@ export const AuthorConfig: any = {
   7: '设备调度'
 };
 
-export const SOCKET_URL = '/'
+// export const SOCKET_URL = '/'
+export const SOCKET_URL = 'http://127.0.0.1:3000'
+
+// {
+//   "/api": {
+//     "target": "http://39.105.149.189",
+//     "changeOrigin": true
+//   }
+// }

@@ -44,6 +44,7 @@ export class SocketService {
   initSocket(): void {
     this.socket = socketIo(SOCKET_URL);
     // console.log(this.socket)
+    // 监听agv变化
     this.socket.on('getAgvInfo', (res) => {
       console.log(res)
       this.dealWithAgvInfo(res)
