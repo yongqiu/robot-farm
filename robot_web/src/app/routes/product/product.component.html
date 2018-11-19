@@ -4,12 +4,13 @@
       <div class="uptable">
         <p>
           <button class="add" nz-button nzType="primary" (click)="create()">新增任务</button>
-          <button class="delete" nz-button nzType="danger">删除任务</button>
+          <button class="delete" nz-button nzType="primary" (click)="taskSev.startTask()">执行任务</button>
+          <!-- <button class="delete" nz-button nzType="danger">删除任务</button> -->
         </p>
         <div nz-row>
           <div nz-col nzSpan="18">
             <div class="table-panel">
-              <nz-table #upTable nzBordered [nzData]="taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
+              <nz-table #upTable nzBordered [nzData]="taskSev.taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
                 <thead>
                   <tr>
                     <th nzWidth="50px" nzLeft="0px"></th>
@@ -46,7 +47,7 @@
                     <td nzRight="0px">
                       <div>
                         <a (click)="editTask(data)">编辑</a>
-                        <a (click)="saveEdit(data.key)">保存</a>
+                        <a (click)="startTask(data)">执行</a>
                       </div>
                     </td>
                   </tr>

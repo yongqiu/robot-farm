@@ -35,8 +35,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     status: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      type: DataTypes.INTEGER
+    },
+    isFinished: {
+      type: DataTypes.INTEGER
     },
     createdAt: {
       type: DataTypes.INTEGER

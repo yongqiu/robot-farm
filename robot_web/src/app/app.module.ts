@@ -11,11 +11,12 @@ import zh from '@angular/common/locales/zh';
 import { LayoutComponent } from './routes/layout/layout.component';
 import { RouterModule } from '@angular/router';
 import { PermissionService } from './service/permission/permission.service';
-import { RequestService } from './service/permission/request.service';
+import { RequestService } from './service/request.service';
 import { Http, HttpModule } from '@angular/http';
 import { CanAuthProvide } from './service/guard/can-auth.provide';
 import { RobotPipeModule } from './common/pipe/robot-pipe.module';
-import { SocketService } from './service/socket/socket.service';
+import { TaskService } from './service/task/task.service';
+import { TaskRequestService } from './service/task/task.request';
 
 registerLocaleData(zh);
 export const routes = [
@@ -67,7 +68,7 @@ export const routes = [
     NgZorroAntdModule.forRoot(),
     RouterModule.forRoot(routes)
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }, PermissionService, RequestService, CanAuthProvide, SocketService],
+  providers: [{ provide: NZ_I18N, useValue: zh_CN }, PermissionService, RequestService, CanAuthProvide, TaskService, TaskRequestService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

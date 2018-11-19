@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { SocketService, AgvModel } from 'src/app/service/socket/socket.service';
+import { TaskService} from 'src/app/service/task/task.service';
 import { Observable } from 'rxjs';
 
 
@@ -11,10 +11,10 @@ import { Observable } from 'rxjs';
 export class AgvManagementComponent implements OnInit {
   @ViewChild('agvPanel') agvPanel: ElementRef;
   private socket: any;
-  constructor(public socketServ: SocketService) { }
+  constructor(public taskServ: TaskService) { }
 
   ngOnInit() {
-    this.socketServ.initSocket();
+    this.taskServ.initSocket();
     // const ESC_KEY = 27;
     // const nameInput = document.getElementById('name') as HTMLInputElement;
     // console.log(nameInput)

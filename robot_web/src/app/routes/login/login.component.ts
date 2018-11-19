@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RequestService } from '../../service/permission/request.service';
+import { RequestService } from '../../service/request.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import { PermissionService } from '../../service/permission/permission.service';
 

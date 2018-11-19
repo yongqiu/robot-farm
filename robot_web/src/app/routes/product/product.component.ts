@@ -1,27 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { isNullOrUndefined } from 'util';
-import { RequestService } from '../../service/permission/request.service';
+import { RequestService } from '../../service/request.service';
+import { TaskModel } from 'src/app/service/task/task.model';
+import { TaskService } from 'src/app/service/task/task.service';
 
-export class TaskModel {
-  id: number;
-  type: number;
-  frameNumber: string;
-  gutterNumber: string;
-  vegetable: string;
-  direction: number;
-  createdAt: number;
-  updateAt: number;
-  constructor(param) {
-    (!isNullOrUndefined(param.id)) && (this.id = param.id);
-    (!isNullOrUndefined(param.type)) && (this.type = param.type);
-    (!isNullOrUndefined(param.frameNumber)) && (this.frameNumber = param.frameNumber);
-    (!isNullOrUndefined(param.gutterNumber)) && (this.gutterNumber = param.gutterNumber);
-    (!isNullOrUndefined(param.vegetable)) && (this.vegetable = param.vegetable);
-    (!isNullOrUndefined(param.direction)) && (this.direction = param.direction);
-    (!isNullOrUndefined(param.createdAt)) && (this.createdAt = param.createdAt);
-    (!isNullOrUndefined(param.updateAt)) && (this.updateAt = param.updateAt);
-  }
-}
+
 
 @Component({
   selector: 'app-product',
@@ -31,13 +14,12 @@ export class TaskModel {
 export class ProductComponent implements OnInit {
   i = 1;
   editCache = {};
-  taskList: TaskModel[] = [];
   taskForm: TaskModel;
   frameList: any = [];
   gutterList: any = [];
   vegetableList: Array<string> = ['青菜', '土豆', '玉米'];
   createTaskView: boolean = false;
-  constructor(private reqSev: RequestService) {
+  constructor(private reqSev: RequestService, public taskSev: TaskService) {
 
   }
 
@@ -73,7 +55,7 @@ export class ProductComponent implements OnInit {
         this.createTaskView = false;
       }
       console.log(res)
-    }else{
+    } else {
       let res = await this.reqSev.queryServer({ url: '/api/PostTask', method: 'post' }, this.taskForm);
       if (res.success) {
         await this.getTaskList();
@@ -86,11 +68,11 @@ export class ProductComponent implements OnInit {
   async getTaskList() {
     let res = await this.reqSev.queryServer({ url: '/api/GetAllTask', method: 'get' }, {});
     if (res.success) {
-      this.taskList = [];
+      this.taskSev.taskList = [];
       res.data.forEach(element => {
-        this.taskList.push(new TaskModel(element))
+        this.taskSev.taskList.push(new TaskModel(element))
       });
-      console.log(this.taskList)
+      console.log(this.taskSev.taskList)
     }
   }
 
@@ -98,6 +80,11 @@ export class ProductComponent implements OnInit {
     this.taskForm = new TaskModel(item);
     this.createTaskView = true;
     console.log(this.taskForm)
+  }
+
+  startTask() {
+    console.log(this.taskSev.taskList)
+
   }
 
 }

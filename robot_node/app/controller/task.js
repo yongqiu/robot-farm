@@ -29,7 +29,9 @@ module.exports = {
         frameNumber: req.body.frameNumber,
         gutterNumber: req.body.gutterNumber,
         vegetable: req.body.vegetable,
-        direction: req.body.direction
+        direction: req.body.direction,
+        isFinished: req.body.isFinished,
+        updatedAt: updatedAt
       }).catch(error => res.status(ERROR.BaseError).send(error));
       res.status(200).send({ success: true, data: status })
     } else {
