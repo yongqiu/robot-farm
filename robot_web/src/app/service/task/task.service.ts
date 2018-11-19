@@ -53,7 +53,7 @@ export class TaskService {
     } else {
       this.agvList[finder] = agvInfo;
     }
-    this.A_agv = this.agvList[0];
+    
   }
 
   async getInitAgv() {
@@ -61,8 +61,11 @@ export class TaskService {
       let res = await this.taskReqSev.getAgvHistoryInfo(agv.AgvName)
       if (res) {
         this.agvList[index] = new AgvModel(res)
+        this.agvList[index].startPort = res.Rfid;
+        this.agvList[index].endPort = null;
       }
     })
+    this.A_agv = this.agvList[0];
     console.log(this.agvList)
   }
 
@@ -71,17 +74,19 @@ export class TaskService {
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {
       return task.isFinished == false;
     })
+    console.log(this.A_agv)
     this.A_agv.startPort = this.taskList[firstUnfinishTaskIndex].frameNumber;
     this.A_agv.endPort = this.taskList[firstUnfinishTaskIndex + 1].frameNumber;
     await this.fromEvent(this.A_agv, this.A_agv.endPort).subscribe((e: AgvModel) => {
-      if(e.RackNumBer == this.A_agv.endPort){
+      console.log(e.RackNumBer)
+      if (e.RackNumBer == this.A_agv.endPort) {
         return e.RackNumBer
       }
     });
     console.log('finish')
   }
 
-  test(){
+  test() {
     this.A_agv.RackNumBer = 'zpj-5';
     console.log(this.A_agv)
   }
