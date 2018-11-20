@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import * as socketIo from 'socket.io-client';
 import { SOCKET_URL } from 'src/app/config';
 import { RequestService } from '../request.service';
 import { AgvModel, TaskModel } from './task.model';
 import { TaskRequestService } from './task.request';
-import { Observable } from 'rxjs';
+import { Observable, of, observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,9 @@ export class TaskService {
   private socket: any;
   agvList: Array<AgvModel> = [];
   taskList: TaskModel[] = [];
-  A_agv: AgvModel;
+  A_agv: any;
   selectB_agv: AgvModel;
+
   constructor(private taskReqSev: TaskRequestService) {
     for (let i = 0; i < 4; i++) {
       this.agvList.push(new AgvModel({
@@ -22,6 +23,7 @@ export class TaskService {
       }))
     }
     this.initSocket()
+    this.A_agv = new EventEmitter();
   }
 
   initSocket(): void {
@@ -53,12 +55,15 @@ export class TaskService {
     } else {
       this.agvList[finder] = agvInfo;
     }
-    
+
+    this.A_agv.emit(this.A_agv)
+
   }
 
   async getInitAgv() {
     this.agvList.forEach(async (agv, index) => {
       let res = await this.taskReqSev.getAgvHistoryInfo(agv.AgvName)
+      console.log(res)
       if (res) {
         this.agvList[index] = new AgvModel(res)
         this.agvList[index].startPort = res.Rfid;
@@ -77,18 +82,25 @@ export class TaskService {
     console.log(this.A_agv)
     this.A_agv.startPort = this.taskList[firstUnfinishTaskIndex].frameNumber;
     this.A_agv.endPort = this.taskList[firstUnfinishTaskIndex + 1].frameNumber;
-    await this.fromEvent(this.A_agv, this.A_agv.endPort).subscribe((e: AgvModel) => {
-      console.log(e.RackNumBer)
-      if (e.RackNumBer == this.A_agv.endPort) {
-        return e.RackNumBer
+    this.A_agv.subscribe(ele => {
+      console.log(this.A_agv)
+      if (this.A_agv.frameNumber == this.A_agv.endPort) {
+        console.log('finish')
       }
     });
-    console.log('finish')
+
   }
 
   test() {
-    this.A_agv.RackNumBer = 'zpj-5';
-    console.log(this.A_agv)
+    const myObservable = of(this.A_agv);
+    // Create observer object
+    const myObserver = {
+      next: x => { console.log('Observer got a next value: ' + x) },
+      error: err => console.error('Observer got an error: ' + err),
+      complete: () => console.log('Observer got a complete notification'),
+    };
+    // Execute with the observer object
+    myObservable.subscribe(myObserver);
   }
 
   // checkEndPort() {
@@ -104,15 +116,12 @@ export class TaskService {
 
   fromEvent(target, eventName) {
     return new Observable((observer) => {
-      const handler = (e) => observer.next(e);
-
-      // Add the event handler to the target
-      target.addEventListener(eventName, handler);
-
-      return () => {
-        // Detach the event handler from the target
-        target.removeEventListener(eventName, handler);
-      };
+      console.log()
+      if (target.RackNumBer != eventName) {
+        observer.next(x => { console.log('Observer got a next value: ' + x) })
+      } else {
+        return target;
+      }
     });
   }
 
