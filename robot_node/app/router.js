@@ -3,6 +3,7 @@ const USER = require('./controller/user');
 const AGV = require('./controller/agvInfo');
 const MOVE = require('./controller/action_move');
 const TASK = require('./controller/task');
+const FRAME = require('./controller/frame');
 
 module.exports = (app) => {
     // app.use('/api/robot', require('./routes/api_robot'));
@@ -26,15 +27,20 @@ module.exports = (app) => {
     app.post('/api/GetAllAgvInfo', AGV.sendAgvInfo);
     app.get('/api/getAgvbyName', AGV.findByAgvName);
     // move
-    // app.post('/api/PostTask', MOVE.create);
-    // app.get('/api/GetAllTask', MOVE.getList);
-    // app.post('/api/UpdateTask', MOVE.update);
-    // app.get('/api/PostTask', MOVE.getTaskByID);
+    app.post('/api/PostMove', MOVE.create);
+    app.get('/api/GetAllMove', MOVE.getList);
+    app.post('/api/UpdateMove', MOVE.update);
+    app.get('/api/GetMove', MOVE.getTaskByID);
     // task
     app.post('/api/PostTask', TASK.create);
     app.get('/api/GetAllTask', TASK.getList);
     app.post('/api/UpdateTask', TASK.update);
-    app.get('/api/PostTask', TASK.getTaskByID);
+    app.get('/api/GetTask', TASK.getTaskByID);
+    // frame
+    app.post('/api/PostFRAME', FRAME.create);
+    app.get('/api/GetAllFRAME', FRAME.getList);
+    app.post('/api/UpdateFRAME', FRAME.update);
+    app.get('/api/GetFRAME', FRAME.getTaskByID);
 
 
 }

@@ -13,8 +13,11 @@ export class TaskService {
   private socket: any;
   agvList: Array<AgvModel> = [];
   taskList: TaskModel[] = [];
-  A_agv: any;
+  A_agv: AgvModel;
+  B_agv_active: AgvModel;
   selectB_agv: AgvModel;
+
+  A_agv_EventEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(private taskReqSev: TaskRequestService) {
     for (let i = 0; i < 4; i++) {
@@ -23,7 +26,6 @@ export class TaskService {
       }))
     }
     this.initSocket()
-    this.A_agv = new EventEmitter();
   }
 
   initSocket(): void {
@@ -31,7 +33,6 @@ export class TaskService {
     // console.log(this.socket)
     // 监听agv变化
     this.socket.on('getAgvInfo', (res) => {
-      console.log(res)
       this.dealWithAgvInfo(res)
     })
     this.getInitAgv()
@@ -41,12 +42,10 @@ export class TaskService {
 
   //更新agv info
   dealWithAgvInfo(res) {
-    console.log(res)
     if (res.type != 1) {
       return;
     }
     let agvInfo = new AgvModel(res.data)
-    console.log(agvInfo)
     let finder = this.agvList.findIndex(agv => {
       return agv.AgvName == agvInfo.AgvName
     })
@@ -55,52 +54,43 @@ export class TaskService {
     } else {
       this.agvList[finder] = agvInfo;
     }
-
-    this.A_agv.emit(this.A_agv)
+    this.A_agv = this.agvList[0];
+    this.A_agv_EventEmitter.emit(this.A_agv)
 
   }
 
+  /**
+   * 获取agv历史数据
+   */
   async getInitAgv() {
     this.agvList.forEach(async (agv, index) => {
       let res = await this.taskReqSev.getAgvHistoryInfo(agv.AgvName)
-      console.log(res)
       if (res) {
         this.agvList[index] = new AgvModel(res)
-        this.agvList[index].startPort = res.Rfid;
-        this.agvList[index].endPort = null;
       }
     })
     this.A_agv = this.agvList[0];
-    console.log(this.agvList)
   }
 
+  /**
+   * 开始任务
+   */
   async startTask() {
-    console.log(this.taskList)
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {
       return task.isFinished == false;
     })
-    console.log(this.A_agv)
-    this.A_agv.startPort = this.taskList[firstUnfinishTaskIndex].frameNumber;
-    this.A_agv.endPort = this.taskList[firstUnfinishTaskIndex + 1].frameNumber;
-    this.A_agv.subscribe(ele => {
-      console.log(this.A_agv)
-      if (this.A_agv.frameNumber == this.A_agv.endPort) {
-        console.log('finish')
+    console.log('开始第一条任务')
+    let startPort = this.taskList[firstUnfinishTaskIndex].frameNumber;
+    let endPort = this.taskList[firstUnfinishTaskIndex + 1].frameNumber;
+    this.A_agv_EventEmitter.subscribe(ele => {
+      if (this.A_agv.RackNumBer == endPort) {
+        console.log('A型 agv已经到达目标点')
       }
     });
-
   }
 
-  test() {
-    const myObservable = of(this.A_agv);
-    // Create observer object
-    const myObserver = {
-      next: x => { console.log('Observer got a next value: ' + x) },
-      error: err => console.error('Observer got an error: ' + err),
-      complete: () => console.log('Observer got a complete notification'),
-    };
-    // Execute with the observer object
-    myObservable.subscribe(myObserver);
+  findenableB_agv(){
+    
   }
 
   // checkEndPort() {
