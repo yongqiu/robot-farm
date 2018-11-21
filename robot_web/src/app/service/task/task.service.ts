@@ -5,6 +5,7 @@ import { RequestService } from '../request.service';
 import { AgvModel, TaskModel } from './task.model';
 import { TaskRequestService } from './task.request';
 import { Observable, of, observable } from 'rxjs';
+import { agvConfig } from './task.config';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class TaskService {
   selectB_agv: AgvModel;
 
   A_agv_EventEmitter: EventEmitter<any> = new EventEmitter();
+  B_agv_EventEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(private taskReqSev: TaskRequestService) {
     for (let i = 0; i < 4; i++) {
@@ -56,8 +58,8 @@ export class TaskService {
     } else {
       this.agvList[finder] = agvInfo;
     }
-    this.A_agv = this.agvList[0];
-    this.A_agv_EventEmitter.emit(this.A_agv)
+    this.A_agv_EventEmitter.emit(this.agvList);
+    this.B_agv_EventEmitter.emit(this.agvList)
 
   }
 
@@ -65,13 +67,13 @@ export class TaskService {
    * 获取agv历史数据
    */
   async getInitAgv() {
-    this.A_agv = this.agvList[0];
     this.agvList.forEach(async (agv, index) => {
       let res = await this.taskReqSev.getAgvHistoryInfo(agv.AgvName)
       if (res) {
         this.agvList[index] = new AgvModel(res);
       }
     })
+    console.log(this.agvList)
   }
 
   /**
@@ -81,22 +83,42 @@ export class TaskService {
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {
       return task.isFinished == false;
     })
+    let targetFrame = this.taskList[firstUnfinishTaskIndex + 1].r_frame;
     this.A_agv = this.agvList[0];
+
     let startPort = this.A_agv.Rfid;
-    let endPort = this.taskList[firstUnfinishTaskIndex + 1].r_frame.stopAgv1;
+    let endPort = targetFrame.stopAgv1;
     this.log(`A型agv由${startPort}移动到${endPort}`)
     this.A_agv_EventEmitter.subscribe(ele => {
+      this.A_agv = ele[0]
       console.log(`A型agv行进到${this.A_agv.Rfid}`)
       if (this.A_agv.Rfid == endPort) {
         this.log('A型agv已经到达目标点')
+        this.A_agv_EventEmitter.complete()
+        this.findenableB_agv(targetFrame);
       }
     });
   }
-
-  findenableB_agv() {
-    let finder = this.agvList.find(agv => {
-      return agv.AgvName != 'AGV01' && agv.BatteryNum > 10
+  /**
+   * B型agv运动
+   * @param targetFrame 
+   */
+  findenableB_agv(targetFrame) {
+    let finderIndex = this.agvList.findIndex(agv => {
+      return agv.AgvName != 'AGV01' && (agv.BatteryNum > agvConfig.lowBatteryNum) && agv.RackNumBer != null
     })
+    console.log(finderIndex)
+    this.B_agv_active = this.agvList[finderIndex];
+    let startPort = this.B_agv_active.Rfid;
+    let endPort = targetFrame.stopAgv2;
+    this.log(`B型agv由${startPort}移动到${endPort}`)
+    this.B_agv_EventEmitter.subscribe(ele => {
+      this.B_agv_active = ele[finderIndex];
+      console.log(`B型agv行进到${this.B_agv_active.Rfid}`)
+      if (this.B_agv_active.Rfid == endPort) {
+        this.log('B型agv已经到达目标点');
+      }
+    });
   }
 
   log(text: string) {

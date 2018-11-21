@@ -39,7 +39,7 @@ export class TaskModel {
   createdAt: number;
   updateAt: number;
   isFinished: boolean = false;
-  r_frame: any
+  r_frame: any;
   constructor(param) {
     (!isNullOrUndefined(param.id)) && (this.id = param.id);
     (!isNullOrUndefined(param.type)) && (this.type = param.type);
