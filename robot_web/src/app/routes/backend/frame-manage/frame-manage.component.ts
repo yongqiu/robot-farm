@@ -24,4 +24,8 @@ export class FrameManageComponent implements OnInit {
     }
   }
 
+  addFrame(){
+    
+  }
+
 }
