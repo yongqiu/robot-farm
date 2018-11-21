@@ -19,14 +19,15 @@ export class ProductComponent implements OnInit {
   gutterList: any = [];
   vegetableList: Array<string> = ['青菜', '土豆', '玉米'];
   createTaskView: boolean = false;
+  actionList: any = [];
   constructor(private reqSev: RequestService, public taskSev: TaskService) {
 
   }
 
   ngOnInit(): void {
-    for (let i = 0; i < 108; i++) {
-      this.frameList.push(`zpj-${i + 1}`);
-    }
+    // for (let i = 0; i < 108; i++) {
+    //   this.frameList.push(`zpj-${i + 1}`);
+    // }
 
     for (let i = 0; i < 19; i++) {
       this.gutterList.push(`c-${i + 1}`)
@@ -35,15 +36,21 @@ export class ProductComponent implements OnInit {
     this.getTaskList()
   }
 
-  create() {
-    this.createTaskView = true;
+  async create() {
     this.taskForm = new TaskModel({
       type: 1,
-      frameNumber: 'zpj-1',
       gutterNumber: 'c-1',
       vegetable: '青菜',
       direction: 1
     })
+    let res = await this.reqSev.queryServer({ url: '/api/GetAllFRAME', method: 'get' }, {})
+    if (res.success) {
+      this.frameList = res.data
+    } else {
+      this.frameList = [];
+    }
+    console.log(this.frameList)
+    this.createTaskView = true;
   }
 
   async submit() {

@@ -5,9 +5,10 @@
       <tr>
         <th nzWidth="50px" nzLeft="0px">序号</th>
         <th nzWidth="100px">栽培架编号</th>
-        <th nzWidth="100px">纵列值</th>
         <th nzWidth="100px">停止agv1</th>
         <th nzWidth="100px">停止agv2</th>
+        <th nzWidth="100px">等待点</th>
+        <th nzWidth="100px">纵列值</th>
         <th nzWidth="100px">向低纵间距</th>
         <th nzWidth="100px">向高纵间距</th>
         <th nzWidth="100px">横列值</th>
@@ -19,19 +20,22 @@
     <tbody>
       <tr *ngFor="let data of avgTable.data;let i = index">
         <td nzLeft="0px">
-          {{data.index}}
+          {{i}}
         </td>
         <td>
-          {{data.number}}
+          {{data.id}}
         </td>
         <td>
-          {{data.colVal}}
+          {{data.stopAgv1}}
         </td>
         <td>
-          {{data.number}}
+          {{data.stopAgv2}}
         </td>
         <td>
-          {{data.colVal}}
+          {{data.stopWait}}
+        </td>
+        <td>
+          {{data.colNumber}}
         </td>
         <td>
           {{data.colLow}}
@@ -40,7 +44,7 @@
           {{data.colHigh}}
         </td>
         <td>
-          {{data.rowVal}}
+          {{data.rowNumber}}
         </td>
         <td>
           {{data.rowLow}}

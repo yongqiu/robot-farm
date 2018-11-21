@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   r_task.associate = (models) => {
-    r_task.hasOne(models.r_user, { foreignKey: 'role' });
+    r_task.belongsTo(models.r_frame, { foreignKey: 'frameNumber', targetKey: 'id' });
   };
 
   return r_task;

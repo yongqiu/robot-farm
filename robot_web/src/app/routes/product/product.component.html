@@ -3,7 +3,7 @@
     <nz-tab nzTitle="上架任务">
       <div class="uptable">
         <p>
-          <button class="add" nz-button nzType="primary" (click)="taskSev.test()">新增任务</button>
+          <button class="add" nz-button nzType="primary" (click)="create()">新增任务</button>
           <button class="delete" nz-button nzType="primary" (click)="taskSev.startTask()">执行任务</button>
           <!-- <button class="delete" nz-button nzType="danger">删除任务</button> -->
         </p>
@@ -33,7 +33,7 @@
                       {{data.type |taskPipe:'type'}}
                     </td>
                     <td>
-                      {{data.frameNumber}}
+                      zpj-{{data.r_frame.colNumber}}-{{data.r_frame.rowNumber}}
                     </td>
                     <td>
                       {{data.gutterNumber}}
@@ -55,7 +55,9 @@
               </nz-table>
             </div>
           </div>
-          <div nz-col nzSpan="6">col-12</div>
+          <div nz-col nzSpan="6">
+            <p *ngFor="let action of taskSev.actionList">{{action}}</p>
+          </div>
         </div>
 
 
@@ -130,10 +132,10 @@
         <label nz-radio [nzValue]="2">下架任务</label>
       </nz-radio-group>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="frameList.length>0">
       <p class="title">选择栽培架</p>
       <nz-select style="width: 120px;" [(ngModel)]="taskForm.frameNumber" nzAllowClear nzPlaceHolder="选择栽培架">
-        <nz-option *ngFor="let frame of frameList;" [nzValue]="frame" [nzLabel]="frame"></nz-option>
+        <nz-option *ngFor="let frame of frameList;" [nzValue]="frame.id" nzLabel="zpj-{{frame.colNumber}}-{{frame.rowNumber}}"></nz-option>
       </nz-select>
     </div>
     <div class="row">

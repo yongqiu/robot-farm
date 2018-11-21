@@ -13,6 +13,7 @@ export class TaskService {
   private socket: any;
   agvList: Array<AgvModel> = [];
   taskList: TaskModel[] = [];
+  actionList: string[] = [];
   A_agv: AgvModel;
   B_agv_active: AgvModel;
   selectB_agv: AgvModel;
@@ -22,9 +23,10 @@ export class TaskService {
   constructor(private taskReqSev: TaskRequestService) {
     for (let i = 0; i < 4; i++) {
       this.agvList.push(new AgvModel({
-        AgvName: `agv${i + 1}`
+        AgvName: `AGV0${i + 1}`
       }))
     }
+    this.getInitAgv()
     this.initSocket()
   }
 
@@ -35,7 +37,7 @@ export class TaskService {
     this.socket.on('getAgvInfo', (res) => {
       this.dealWithAgvInfo(res)
     })
-    this.getInitAgv()
+
 
     console.log('init socket')
   }
@@ -63,13 +65,13 @@ export class TaskService {
    * 获取agv历史数据
    */
   async getInitAgv() {
+    this.A_agv = this.agvList[0];
     this.agvList.forEach(async (agv, index) => {
       let res = await this.taskReqSev.getAgvHistoryInfo(agv.AgvName)
       if (res) {
-        this.agvList[index] = new AgvModel(res)
+        this.agvList[index] = new AgvModel(res);
       }
     })
-    this.A_agv = this.agvList[0];
   }
 
   /**
@@ -79,18 +81,26 @@ export class TaskService {
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {
       return task.isFinished == false;
     })
-    console.log('开始第一条任务')
-    let startPort = this.taskList[firstUnfinishTaskIndex].frameNumber;
-    let endPort = this.taskList[firstUnfinishTaskIndex + 1].frameNumber;
+    this.A_agv = this.agvList[0];
+    let startPort = this.A_agv.Rfid;
+    let endPort = this.taskList[firstUnfinishTaskIndex + 1].r_frame.stopAgv1;
+    this.log(`A型agv由${startPort}移动到${endPort}`)
     this.A_agv_EventEmitter.subscribe(ele => {
-      if (this.A_agv.RackNumBer == endPort) {
-        console.log('A型 agv已经到达目标点')
+      console.log(`A型agv行进到${this.A_agv.Rfid}`)
+      if (this.A_agv.Rfid == endPort) {
+        this.log('A型agv已经到达目标点')
       }
     });
   }
 
-  findenableB_agv(){
-    
+  findenableB_agv() {
+    let finder = this.agvList.find(agv => {
+      return agv.AgvName != 'AGV01' && agv.BatteryNum > 10
+    })
+  }
+
+  log(text: string) {
+    this.actionList.push(text)
   }
 
   // checkEndPort() {

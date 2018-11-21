@@ -1,4 +1,5 @@
 const r_task = require('../models').r_task;
+const r_frame = require('../models').r_frame;
 const ERROR = require('../../config/errorCode');
 
 module.exports = {
@@ -14,6 +15,7 @@ module.exports = {
     }).catch(error => res.status(ERROR.BaseError).send(error));
     res.status(200).send({ success: true, data: status });
   },
+
   async update(req, res) {
     var id = req.body.id;
     let updatedAt = Date.parse(new Date()) / 1000;
@@ -22,7 +24,6 @@ module.exports = {
         id: id
       }
     })
-
     if (status) {
       status.update({
         type: req.body.type,
@@ -40,14 +41,21 @@ module.exports = {
       });
     }
   },
+
   async getList(req, res) {
     let tasks = await r_task.findAll({
       where: {
         status: 0
-      }
+      },
+      include: [
+        {
+          model: r_frame
+        }
+      ]
     }).catch(error => res.status(ERROR.BaseError).send(error));
     res.status(200).send({ success: true, data: tasks });
   },
+  
   async getTaskByID(req, res) {
     var id = req.query.id;
     let task = await r_task.findOne({
