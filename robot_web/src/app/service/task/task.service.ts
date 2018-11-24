@@ -6,6 +6,7 @@ import { AgvModel, TaskModel } from './task.model';
 import { TaskRequestService } from './task.request';
 import { Observable, of, observable } from 'rxjs';
 import { agvConfig } from './task.config';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class TaskService {
   A_agv_EventEmitter: EventEmitter<any> = new EventEmitter();
   B_agv_EventEmitter: EventEmitter<any> = new EventEmitter();
 
-  constructor(private taskReqSev: TaskRequestService) {
+  constructor(private taskReqSev: TaskRequestService, private message: NzMessageService) {
     for (let i = 0; i < 4; i++) {
       this.agvList.push(new AgvModel({
         AgvName: `AGV0${i + 1}`
@@ -85,13 +86,23 @@ export class TaskService {
     })
     let targetFrame = this.taskList[firstUnfinishTaskIndex + 1].r_frame;
     this.A_agv = this.agvList[0];
-
     let startPort = this.A_agv.Rfid;
     let endPort = targetFrame.stopAgv1;
+    ////////////////执行移动命令/////////////////
+    let param = {
+      AGVName: this.A_agv.AgvName,
+      SourcePort: startPort,
+      DestPort: endPort
+    }
+    let res = await this.taskReqSev.postAgvMoveAction(param)
+    if (!res) {
+      return;
+    }
+    //////////////////监听agv位置///////////////
     this.log(`A型agv由${startPort}移动到${endPort}`)
     this.A_agv_EventEmitter.subscribe(ele => {
       this.A_agv = ele[0]
-      console.log(`A型agv行进到${this.A_agv.Rfid}`)
+      this.message.info(`A型agv行进到${this.A_agv.Rfid}`)
       if (this.A_agv.Rfid == endPort) {
         this.log('A型agv已经到达目标点')
         this.A_agv_EventEmitter.complete()
@@ -99,6 +110,8 @@ export class TaskService {
       }
     });
   }
+
+
   /**
    * B型agv运动
    * @param targetFrame 
@@ -112,13 +125,38 @@ export class TaskService {
     let startPort = this.B_agv_active.Rfid;
     let endPort = targetFrame.stopAgv2;
     this.log(`B型agv由${startPort}移动到${endPort}`)
+    ////////////////执行移动命令/////////////////
     this.B_agv_EventEmitter.subscribe(ele => {
       this.B_agv_active = ele[finderIndex];
-      console.log(`B型agv行进到${this.B_agv_active.Rfid}`)
+      this.message.info(`B型agv行进到${this.B_agv_active.Rfid}`)
       if (this.B_agv_active.Rfid == endPort) {
         this.log('B型agv已经到达目标点');
+        ///////////////执行抓取命令//////////////
+        this.postCatch()
       }
     });
+  }
+
+  /**
+   * 抓取成功
+   * @param text 
+   */
+  async postCatch() {
+    let param = {
+      AgvName: this.B_agv_active.AgvName,
+      RackContent: this.B_agv_active.RackContent - 1
+    }
+    let res = await this.taskReqSev.updateAgvInfo(param);
+    // console.log(res.data)
+    if (res.success) {
+      this.message.success('抓取成功')
+    }
+    let RackContent = res.data.RackContent;
+    if (RackContent > 0) {
+      this.postCatch()
+    } else {
+      ///////////执行回去动作/////////////
+    }
   }
 
   log(text: string) {

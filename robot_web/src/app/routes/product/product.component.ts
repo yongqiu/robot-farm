@@ -3,6 +3,8 @@ import { isNullOrUndefined } from 'util';
 import { RequestService } from '../../service/request.service';
 import { TaskModel } from 'src/app/service/task/task.model';
 import { TaskService } from 'src/app/service/task/task.service';
+import { NzMessageService } from 'ng-zorro-antd';
+import * as moment from 'moment';
 
 
 
@@ -20,8 +22,30 @@ export class ProductComponent implements OnInit {
   vegetableList: Array<string> = ['青菜', '土豆', '玉米'];
   createTaskView: boolean = false;
   actionList: any = [];
-  constructor(private reqSev: RequestService, public taskSev: TaskService) {
+  // 模拟
+  moveAction = {
+    name: '',
+    port: ''
+  }
+  constructor(private reqSev: RequestService, public taskSev: TaskService, public message: NzMessageService) {
 
+  }
+
+  async analogMoveTask() {
+    let res = await this.reqSev.queryServer({ url: '/api/GetLastMove', method: 'get' }, {});
+    let data = res.data;
+    this.message.info(`获取到移动任务：-${data.AGVName}-由-${data.SourcePort}-移动到-${data.DestPort}-`)
+  }
+
+  async analogMoveAction() {
+    let param = {
+      AgvName: this.moveAction.name,
+      Rfid: this.moveAction.port,
+    }
+    let res = await this.reqSev.queryServer({ url: '/api/PostAllAgvInfo', method: 'post' }, param);
+    if(!res){
+      this.message.error(`未找到agv：${this.moveAction.name}`)
+    }
   }
 
   ngOnInit(): void {

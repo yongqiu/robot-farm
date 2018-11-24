@@ -26,15 +26,17 @@ module.exports = (app) => {
     //agv
     app.post('/api/GetAllAgvInfo', AGV.sendAgvInfo);
     app.get('/api/getAgvbyName', AGV.findByAgvName);
+    app.post('/api/PostAllAgvInfo', AGV.update)
     // move
     app.post('/api/PostMove', MOVE.create);
     app.get('/api/GetAllMove', MOVE.getList);
     app.post('/api/UpdateMove', MOVE.update);
     app.get('/api/GetMove', MOVE.getTaskByID);
+    app.get('/api/GetLastMove', MOVE.getLastTask);      // agv获取移动动作的接口
     // task
     app.post('/api/PostTask', TASK.create);
     app.get('/api/GetAllTask', TASK.getList);
-    app.post('/api/UpdateTask', TASK.update);
+    app.post('/api/UpdateTask', TASK.update);       // agv更新信息的接口
     app.get('/api/GetTask', TASK.getTaskByID);
     // frame
     app.post('/api/PostFRAME', FRAME.create);
