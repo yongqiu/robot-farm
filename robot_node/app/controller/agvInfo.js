@@ -36,23 +36,23 @@ module.exports = {
       order: [['createdAt', 'DESC']]
     })
     let param = {
-      AgvName: req.body.AgvName ? req.body.AgvName : status.dataValues.AgvName,
-      RackNumBer: req.body.RackNumBer ? req.body.RackNumBer : status.dataValues.RackNumBer,
-      Rfid: req.body.Rfid ? req.body.Rfid : status.dataValues.Rfid,
-      Speed: req.body.Speed ? req.body.Speed : status.dataValues.Speed,
-      Voltage: req.body.Voltage ? req.body.Voltage : status.dataValues.Voltage,
-      Status: req.body.Status ? req.body.Status : status.dataValues.Status,
-      RunStatus: req.body.RunStatus ? req.body.RunStatus : status.dataValues.RunStatus,
-      BatteryNum: req.body.BatteryNum ? req.body.BatteryNum : status.dataValues.BatteryNum,
-      Alarm: req.body.Alarm ? req.body.Alarm : status.dataValues.Alarm,
-      RunTimes: req.body.RunTimes ? req.body.RunTimes : status.dataValues.RunTimes,
-      RackContent: req.body.RackContent ? req.body.RackContent : status.dataValues.RackContent,
+      AgvName: req.body.AgvName != undefined ? req.body.AgvName : status.dataValues.AgvName,
+      RackNumBer: req.body.RackNumBer != undefined ? req.body.RackNumBer : status.dataValues.RackNumBer,
+      Rfid: req.body.Rfid != undefined ? req.body.Rfid : status.dataValues.Rfid,
+      Speed: req.body.Speed != undefined ? req.body.Speed : status.dataValues.Speed,
+      Voltage: req.body.Voltage != undefined ? req.body.Voltage : status.dataValues.Voltage,
+      Status: req.body.Status != undefined ? req.body.Status : status.dataValues.Status,
+      RunStatus: req.body.RunStatus != undefined ? req.body.RunStatus : status.dataValues.RunStatus,
+      BatteryNum: req.body.BatteryNum != undefined ? req.body.BatteryNum : status.dataValues.BatteryNum,
+      Alarm: req.body.Alarm != undefined ? req.body.Alarm : status.dataValues.Alarm,
+      RunTimes: req.body.RunTimes != undefined ? req.body.RunTimes : status.dataValues.RunTimes,
+      RackContent: req.body.RackContent != undefined ? req.body.RackContent : status.dataValues.RackContent,
       updatedAt: updatedAt
     }
     if (status) {
       status.update(param).catch(error => res.status(ERROR.BaseError).send(error));
       req.io.sockets.emit("getAgvInfo", { success: true, type: 1, data: param });
-      res.status(200).send({ success: true, data: status })
+      res.status(200).send({ success: true, data: param })
     } else {
       // createAgvInfo(req, res)
       return res.status(ERROR.NotFound).send({

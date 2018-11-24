@@ -116,7 +116,7 @@ export class TaskService {
    * B型agv运动
    * @param targetFrame 
    */
-  findenableB_agv(targetFrame) {
+  async findenableB_agv(targetFrame) {
     let finderIndex = this.agvList.findIndex(agv => {
       return agv.AgvName != 'AGV01' && (agv.BatteryNum > agvConfig.lowBatteryNum) && agv.RackNumBer != null
     })
@@ -131,32 +131,48 @@ export class TaskService {
       this.message.info(`B型agv行进到${this.B_agv_active.Rfid}`)
       if (this.B_agv_active.Rfid == endPort) {
         this.log('B型agv已经到达目标点');
+        this.B_agv_EventEmitter.complete()
         ///////////////执行抓取命令//////////////
-        this.postCatch()
+        this.agvCatching(this.B_agv_active.RackContent)
       }
     });
+  }
+
+  async agvCatching(RackContent) {
+    let res = await this.postCatch(RackContent);
+    console.log(res)
   }
 
   /**
    * 抓取成功
    * @param text 
    */
-  async postCatch() {
-    let param = {
-      AgvName: this.B_agv_active.AgvName,
-      RackContent: this.B_agv_active.RackContent - 1
-    }
-    let res = await this.taskReqSev.updateAgvInfo(param);
-    // console.log(res.data)
-    if (res.success) {
-      this.message.success('抓取成功')
-    }
-    let RackContent = res.data.RackContent;
-    if (RackContent > 0) {
-      this.postCatch()
-    } else {
-      ///////////执行回去动作/////////////
-    }
+  async postCatch(RackContentNumber): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      let param = {
+        AgvName: this.B_agv_active.AgvName,
+        RackContent: RackContentNumber - 1
+      }
+      console.log(param)
+      let res = await this.taskReqSev.updateAgvInfo(param);
+      // console.log(res.data)
+      let RackContent = res.data.RackContent;
+      if (res.success) {
+        this.message.success(`抓取成功,当前料架剩余${RackContent}`)
+      }
+      if (RackContent > 0) {
+        setTimeout(() => {
+          this.postCatch(RackContent)
+        }, 2000);
+      } else {
+        ///////////执行回去动作/////////////
+        resolve(res.data);
+      }
+    })
+    //////////////发送抓取请求/////////////
+    //////////////更新agv的RackContent//////////
+
+
   }
 
   log(text: string) {
