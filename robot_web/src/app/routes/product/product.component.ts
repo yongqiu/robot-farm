@@ -14,7 +14,8 @@ import * as moment from 'moment';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-  i = 1;
+  dataSet = [];
+  // i = 1;
   editCache = {};
   taskForm: TaskModel;
   frameList: any = [];
@@ -43,7 +44,7 @@ export class ProductComponent implements OnInit {
       Rfid: this.moveAction.port,
     }
     let res = await this.reqSev.queryServer({ url: '/api/PostAllAgvInfo', method: 'post' }, param);
-    if(!res){
+    if (!res) {
       this.message.error(`未找到agv：${this.moveAction.name}`)
     }
   }

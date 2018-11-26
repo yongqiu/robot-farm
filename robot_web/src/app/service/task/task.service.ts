@@ -81,6 +81,8 @@ export class TaskService {
    * 开始任务
    */
   async startTask() {
+    this.A_agv_EventEmitter = new EventEmitter();
+    this.B_agv_EventEmitter = new EventEmitter();
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {
       return task.isFinished == false;
     })
@@ -118,7 +120,7 @@ export class TaskService {
    */
   async findenableB_agv(targetFrame) {
     let finderIndex = this.agvList.findIndex(agv => {
-      return agv.AgvName != 'AGV01' && (agv.BatteryNum > agvConfig.lowBatteryNum) && agv.RackNumBer != null
+      return agv.AgvName != 'AGV01' && (agv.BatteryNum > agvConfig.lowBatteryNum) && agv.RackNumBer != null && agv.RackContent > 0
     })
     console.log(finderIndex)
     this.B_agv_active = this.agvList[finderIndex];
@@ -131,6 +133,7 @@ export class TaskService {
       this.message.info(`B型agv行进到${this.B_agv_active.Rfid}`)
       if (this.B_agv_active.Rfid == endPort) {
         this.log('B型agv已经到达目标点');
+        this.log('B型agv开始上架');
         this.B_agv_EventEmitter.complete()
         ///////////////执行抓取命令//////////////
         this.agvCatching(this.B_agv_active.RackContent)
@@ -148,7 +151,8 @@ export class TaskService {
    * @param text 
    */
   async postCatch(RackContentNumber): Promise<any> {
-    return new Promise(async (resolve, reject) => {
+
+    if (RackContentNumber > 0) {
       let param = {
         AgvName: this.B_agv_active.AgvName,
         RackContent: RackContentNumber - 1
@@ -160,19 +164,13 @@ export class TaskService {
       if (res.success) {
         this.message.success(`抓取成功,当前料架剩余${RackContent}`)
       }
-      if (RackContent > 0) {
-        setTimeout(() => {
-          this.postCatch(RackContent)
-        }, 2000);
-      } else {
-        ///////////执行回去动作/////////////
-        resolve(res.data);
-      }
-    })
-    //////////////发送抓取请求/////////////
-    //////////////更新agv的RackContent//////////
-
-
+      setTimeout(() => {
+        this.postCatch(RackContent)
+      }, 2000);
+    } else {
+      this.log('B型agv返回充电');
+      this.startTask()
+    }
   }
 
   log(text: string) {
