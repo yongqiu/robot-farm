@@ -1,4 +1,12 @@
 <div class="card-container">
+  <p>
+    <a href="javascript:;" (click)="analogMoveTask()">模拟agv获取位移任务</a>
+  </p>
+  <p>
+    <input nz-input placeholder="agvName" style="width:100px" [(ngModel)]="moveAction.name">
+    <input nz-input placeholder="当前位置" style="width:100px" [(ngModel)]="moveAction.port">
+    <a href="javascript:;" (click)="analogMoveAction()">模拟agv执行位移动作</a>
+  </p>
   <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
     <nz-tab nzTitle="上架任务">
       <div class="uptable">

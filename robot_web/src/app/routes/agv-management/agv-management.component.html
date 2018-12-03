@@ -1,18 +1,25 @@
 <div class="agvPanel" #agvPanel>
-  <input type="text" id="name">
   <div nz-row [nzGutter]="24">
     <div nz-col [nzSpan]="12" *ngFor="let agv of taskServ.agvList">
       <nz-card nzTitle="{{agv.AgvName}}">
-        <p><span>AGV名：</span>{{agv.AgvName}}</p>
-        <p><span>料架号：</span>{{agv.RackNumBer}}</p>
-        <p><span>当前地标卡：</span>{{agv.Rfid}}</p>
-        <p><span>速度：</span>{{agv.Speed}} 米/分</p>
-        <p><span>电压：</span>{{agv.Voltage}}</p>
-        <p><span>状态：</span>{{agv.Status}}</p>
-        <p><span>运行状态：</span>{{agv.RunStatus}}</p>
-        <p><span>充电次数：</span>{{agv.BatteryNum}}</p>
-        <p><span>告警信息：</span>{{agv.Alarm}}</p>
-        <p><span>运行总时长：</span>{{agv.RunTimes}} 分</p>
+        <div class="row" nz-row>
+          <div class="col1" nz-col nzSpan="12">
+            <p><span>料架号：</span>{{agv.RackNumBer}}</p>
+            <p><span>当前地标卡：</span>{{agv.Rfid}}</p>
+            <p><span>速度：</span>{{agv.Speed}} 米/分</p>
+            <p><span>电压：</span>{{agv.Voltage}}</p>
+            <p><span>状态：</span>{{agv.Status}}</p>
+          </div>
+          <div class="col2" nz-col nzSpan="12">
+            <p><span>运行状态：</span>{{agv.RunStatus}}</p>
+            <p><span>充电次数：</span>{{agv.BatteryNum}}</p>
+            <p><span>告警信息：</span>{{agv.Alarm}}</p>
+            <p><span>运行总时长：</span>{{agv.RunTimes}} 分</p>
+            <p><span>当前料架剩余：</span>{{agv.RackContent}} </p>
+          </div>
+
+        </div>
+
       </nz-card>
     </div>
   </div>

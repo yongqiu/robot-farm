@@ -6,6 +6,7 @@ import { AgvModel, TaskModel } from './task.model';
 import { TaskRequestService } from './task.request';
 import { Observable, of, observable } from 'rxjs';
 import { agvConfig } from './task.config';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class TaskService {
   A_agv_EventEmitter: EventEmitter<any> = new EventEmitter();
   B_agv_EventEmitter: EventEmitter<any> = new EventEmitter();
 
-  constructor(private taskReqSev: TaskRequestService) {
+  constructor(private taskReqSev: TaskRequestService, private message: NzMessageService) {
     for (let i = 0; i < 4; i++) {
       this.agvList.push(new AgvModel({
         AgvName: `AGV0${i + 1}`
@@ -80,18 +81,30 @@ export class TaskService {
    * 开始任务
    */
   async startTask() {
+    this.A_agv_EventEmitter = new EventEmitter();
+    this.B_agv_EventEmitter = new EventEmitter();
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {
       return task.isFinished == false;
     })
     let targetFrame = this.taskList[firstUnfinishTaskIndex + 1].r_frame;
     this.A_agv = this.agvList[0];
-
     let startPort = this.A_agv.Rfid;
     let endPort = targetFrame.stopAgv1;
+    ////////////////执行移动命令/////////////////
+    let param = {
+      AGVName: this.A_agv.AgvName,
+      SourcePort: startPort,
+      DestPort: endPort
+    }
+    let res = await this.taskReqSev.postAgvMoveAction(param)
+    if (!res) {
+      return;
+    }
+    //////////////////监听agv位置///////////////
     this.log(`A型agv由${startPort}移动到${endPort}`)
     this.A_agv_EventEmitter.subscribe(ele => {
       this.A_agv = ele[0]
-      console.log(`A型agv行进到${this.A_agv.Rfid}`)
+      this.message.info(`A型agv行进到${this.A_agv.Rfid}`)
       if (this.A_agv.Rfid == endPort) {
         this.log('A型agv已经到达目标点')
         this.A_agv_EventEmitter.complete()
@@ -99,32 +112,75 @@ export class TaskService {
       }
     });
   }
+
+
   /**
    * B型agv运动
    * @param targetFrame 
    */
-  findenableB_agv(targetFrame) {
+  async findenableB_agv(targetFrame) {
     let finderIndex = this.agvList.findIndex(agv => {
-      return agv.AgvName != 'AGV01' && (agv.BatteryNum > agvConfig.lowBatteryNum) && agv.RackNumBer != null
+      return agv.AgvName != 'AGV01' && (agv.BatteryNum > agvConfig.lowBatteryNum) && agv.RackNumBer != null && agv.RackContent > 0
     })
     console.log(finderIndex)
     this.B_agv_active = this.agvList[finderIndex];
     let startPort = this.B_agv_active.Rfid;
     let endPort = targetFrame.stopAgv2;
     this.log(`B型agv由${startPort}移动到${endPort}`)
+    ////////////////执行移动命令/////////////////
     this.B_agv_EventEmitter.subscribe(ele => {
       this.B_agv_active = ele[finderIndex];
-      console.log(`B型agv行进到${this.B_agv_active.Rfid}`)
+      this.message.info(`B型agv行进到${this.B_agv_active.Rfid}`)
       if (this.B_agv_active.Rfid == endPort) {
         this.log('B型agv已经到达目标点');
+<<<<<<< HEAD
         this.B_agv_EventEmitter.complete();
         this.catchHandle();
+=======
+        this.log('B型agv开始上架');
+        this.B_agv_EventEmitter.complete()
+        ///////////////执行抓取命令//////////////
+        this.agvCatching(this.B_agv_active.RackContent)
+>>>>>>> 8ebafd09144277902dc6550637049ee9669ae6cf
       }
     });
   }
 
+<<<<<<< HEAD
   catchHandle(){
     this.log('')
+=======
+  async agvCatching(RackContent) {
+    let res = await this.postCatch(RackContent);
+    console.log(res)
+  }
+
+  /**
+   * 抓取成功
+   * @param text 
+   */
+  async postCatch(RackContentNumber): Promise<any> {
+
+    if (RackContentNumber > 0) {
+      let param = {
+        AgvName: this.B_agv_active.AgvName,
+        RackContent: RackContentNumber - 1
+      }
+      console.log(param)
+      let res = await this.taskReqSev.updateAgvInfo(param);
+      // console.log(res.data)
+      let RackContent = res.data.RackContent;
+      if (res.success) {
+        this.message.success(`抓取成功,当前料架剩余${RackContent}`)
+      }
+      setTimeout(() => {
+        this.postCatch(RackContent)
+      }, 2000);
+    } else {
+      this.log('B型agv返回充电');
+      this.startTask()
+    }
+>>>>>>> 8ebafd09144277902dc6550637049ee9669ae6cf
   }
 
   log(text: string) {

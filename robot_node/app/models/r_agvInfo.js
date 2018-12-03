@@ -46,6 +46,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     createdAt: {
       type: DataTypes.INTEGER.UNSIGNED
+    },
+    updatedAt: {
+      type: DataTypes.INTEGER.UNSIGNED
+    },
+    RackContent: {
+      type: DataTypes.INTEGER.UNSIGNED
     }
   });
 

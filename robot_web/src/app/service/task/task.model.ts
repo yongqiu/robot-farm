@@ -14,6 +14,7 @@ export class AgvModel {
   RunTimes: number;
   startPort: string;
   endPort: string;
+  RackContent: number;
   constructor(param?) {
     (!isNullOrUndefined(param.AgvName)) && (this.AgvName = param.AgvName);
     (!isNullOrUndefined(param.RackNumBer)) && (this.RackNumBer = param.RackNumBer);
@@ -27,6 +28,7 @@ export class AgvModel {
     (!isNullOrUndefined(param.RunTimes)) && (this.RunTimes = param.RunTimes);
     (!isNullOrUndefined(param.startPort)) && (this.startPort = param.startPort);
     (!isNullOrUndefined(param.endPort)) && (this.endPort = param.endPort);
+    (!isNullOrUndefined(param.RackContent)) && (this.RackContent = param.RackContent);
   }
 }
 export class TaskModel {
@@ -51,5 +53,22 @@ export class TaskModel {
     (!isNullOrUndefined(param.updateAt)) && (this.updateAt = param.updateAt);
     (!isNullOrUndefined(param.isFinished)) && (this.isFinished = param.isFinished);
     (!isNullOrUndefined(param.r_frame)) && (this.r_frame = param.r_frame);
+  }
+}
+
+export class MoveActionModel {
+  TaskID: number;
+  TaskType: number;
+  AGVName: string;
+  SourcePort: string;
+  DestPort: string;
+  createdAt: number;
+  constructor(param) {
+    (!isNullOrUndefined(param.TaskID)) && (this.TaskID = param.TaskID);
+    (!isNullOrUndefined(param.TaskType)) && (this.TaskType = param.TaskType);
+    (!isNullOrUndefined(param.AGVName)) && (this.AGVName = param.AGVName);
+    (!isNullOrUndefined(param.SourcePort)) && (this.SourcePort = param.SourcePort);
+    (!isNullOrUndefined(param.DestPort)) && (this.DestPort = param.DestPort);
+    (!isNullOrUndefined(param.createdAt)) && (this.createdAt = param.createdAt);
   }
 }

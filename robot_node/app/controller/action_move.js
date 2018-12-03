@@ -7,8 +7,8 @@ module.exports = {
         let status = await r_action_move.create({
             TaskType: req.body.TaskType,
             AGVName: req.body.AGVName,
-            SourcePort: req.body.SourcePort,
-            DestPort: req.body.DestPort,
+            SourcePort: req.body.SourcePort,    // startPort
+            DestPort: req.body.DestPort,    // endPort
             IsRead: req.body.IsRead,
             createdAt: createdAt,
         }).catch(error => res.status(ERROR.BaseError).send(error));
@@ -50,6 +50,16 @@ module.exports = {
             where: {
                 TaskID: TaskID
             }
+        }).catch(error => res.status(ERROR.BaseError).send(error));
+        res.status(200).send({ success: true, data: task });
+    },
+    async getLastTask(req, res) {
+        // var TaskID = req.query.TaskID;
+        let task = await r_action_move.findOne({
+            where: {
+                status: 0
+            },
+            order: [['createdAt', 'DESC']]
         }).catch(error => res.status(ERROR.BaseError).send(error));
         res.status(200).send({ success: true, data: task });
     }
