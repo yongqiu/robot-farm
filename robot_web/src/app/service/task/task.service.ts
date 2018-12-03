@@ -117,8 +117,14 @@ export class TaskService {
       console.log(`B型agv行进到${this.B_agv_active.Rfid}`)
       if (this.B_agv_active.Rfid == endPort) {
         this.log('B型agv已经到达目标点');
+        this.B_agv_EventEmitter.complete();
+        this.catchHandle();
       }
     });
+  }
+
+  catchHandle(){
+    this.log('')
   }
 
   log(text: string) {
