@@ -133,23 +133,14 @@ export class TaskService {
       this.message.info(`B型agv行进到${this.B_agv_active.Rfid}`)
       if (this.B_agv_active.Rfid == endPort) {
         this.log('B型agv已经到达目标点');
-<<<<<<< HEAD
-        this.B_agv_EventEmitter.complete();
-        this.catchHandle();
-=======
         this.log('B型agv开始上架');
         this.B_agv_EventEmitter.complete()
         ///////////////执行抓取命令//////////////
         this.agvCatching(this.B_agv_active.RackContent)
->>>>>>> 8ebafd09144277902dc6550637049ee9669ae6cf
       }
     });
   }
 
-<<<<<<< HEAD
-  catchHandle(){
-    this.log('')
-=======
   async agvCatching(RackContent) {
     let res = await this.postCatch(RackContent);
     console.log(res)
@@ -180,7 +171,6 @@ export class TaskService {
       this.log('B型agv返回充电');
       this.startTask()
     }
->>>>>>> 8ebafd09144277902dc6550637049ee9669ae6cf
   }
 
   log(text: string) {
