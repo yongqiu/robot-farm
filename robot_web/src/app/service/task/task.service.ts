@@ -126,7 +126,7 @@ export class TaskService {
     this.B_agv_active = this.agvList[finderIndex];
     let startPort = this.B_agv_active.Rfid;
     let endPort = targetFrame.stopAgv2;
-    this.log(`B型agv由${startPort}移动到${endPort}`)
+    this.log(`B型agv${this.agvList[finderIndex].AgvName}由${startPort}移动到${endPort}`)
     ////////////////执行移动命令/////////////////
     this.B_agv_EventEmitter.subscribe(ele => {
       this.B_agv_active = ele[finderIndex];
