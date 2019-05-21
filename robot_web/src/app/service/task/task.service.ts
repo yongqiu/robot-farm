@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import * as socketIo from 'socket.io-client';
 import { SOCKET_URL } from 'src/app/config';
 import { RequestService } from '../request.service';
-import { AgvModel, TaskModel } from './task.model';
+import { AgvModel, ITaskViewModel } from './task.model';
 import { TaskRequestService } from './task.request';
 import { Observable, of, observable } from 'rxjs';
 import { agvConfig } from './task.config';
@@ -14,7 +14,7 @@ import { NzMessageService } from 'ng-zorro-antd';
 export class TaskService {
   private socket: any;
   agvList: Array<AgvModel> = [];
-  taskList: TaskModel[] = [];
+  taskList: ITaskViewModel[] = [];
   actionList: string[] = [];
   A_agv: AgvModel;
   B_agv_active: AgvModel;

@@ -1,20 +1,20 @@
 <div class="card-container">
-  <p>
+  <!-- <p>
     <a href="javascript:;" (click)="analogMoveTask()">模拟agv获取位移任务</a>
   </p>
   <p>
     <input nz-input placeholder="agvName" style="width:100px" [(ngModel)]="moveAction.name">
     <input nz-input placeholder="当前位置" style="width:100px" [(ngModel)]="moveAction.port">
     <a href="javascript:;" (click)="analogMoveAction()">模拟agv执行位移动作</a>
+  </p> -->
+  <p>
+    <button class="add" nz-button nzType="primary" (click)="create()">新增任务</button>
+    <button class="delete" nz-button nzType="primary" (click)="taskSev.startTask()">执行任务</button>
+    <!-- <button class="delete" nz-button nzType="danger">删除任务</button> -->
   </p>
   <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
     <nz-tab nzTitle="上架任务">
       <div class="uptable">
-        <p>
-          <button class="add" nz-button nzType="primary" (click)="create()">新增任务</button>
-          <button class="delete" nz-button nzType="primary" (click)="taskSev.startTask()">执行任务</button>
-          <!-- <button class="delete" nz-button nzType="danger">删除任务</button> -->
-        </p>
         <div nz-row>
           <div nz-col nzSpan="18">
             <div class="table-panel">
@@ -25,7 +25,6 @@
                     <th nzWidth="100px">序号</th>
                     <th nzWidth="100px">操作类型</th>
                     <th nzWidth="100px">架号</th>
-                    <th nzWidth="100px">槽号</th>
                     <th nzWidth="100px">上架蔬菜</th>
                     <th nzWidth="200px">上架日期</th>
                     <th nzWidth="100px" nzRight="0px">操作</th>
@@ -42,9 +41,6 @@
                     </td>
                     <td>
                       zpj-{{data.r_frame.colNumber}}-{{data.r_frame.rowNumber}}
-                    </td>
-                    <td>
-                      {{data.gutterNumber}}
                     </td>
                     <td>
                       {{data.vegetable}}
@@ -129,12 +125,6 @@
 <nz-modal [(nzVisible)]="createTaskView" nzTitle="任务" (nzOnCancel)="createTaskView = false" (nzOnOk)="submit()">
   <div class="createTask" *ngIf="taskForm">
     <div class="row">
-      <nz-radio-group [(ngModel)]="taskForm.type">
-        <label nz-radio [nzValue]="1">正常任务</label>
-        <label nz-radio [nzValue]="2">单盘任务</label>
-      </nz-radio-group>
-    </div>
-    <div class="row">
       <nz-radio-group [(ngModel)]="taskForm.direction">
         <label nz-radio [nzValue]="1">上架任务</label>
         <label nz-radio [nzValue]="2">下架任务</label>
@@ -143,19 +133,15 @@
     <div class="row" *ngIf="frameList.length>0">
       <p class="title">选择栽培架</p>
       <nz-select style="width: 120px;" [(ngModel)]="taskForm.frameNumber" nzAllowClear nzPlaceHolder="选择栽培架">
-        <nz-option *ngFor="let frame of frameList;" [nzValue]="frame.id" nzLabel="zpj-{{frame.colNumber}}-{{frame.rowNumber}}"></nz-option>
-      </nz-select>
-    </div>
-    <div class="row">
-      <p class="title">选择槽号</p>
-      <nz-select style="width: 120px;" [(ngModel)]="taskForm.gutterNumber" nzAllowClear nzPlaceHolder="选择槽号">
-        <nz-option *ngFor="let gutter of gutterList;" [nzValue]="gutter" [nzLabel]="gutter"></nz-option>
+        <nz-option *ngFor="let frame of frameList;" [nzValue]="frame.id"
+          nzLabel="zpj-{{frame.colNumber}}-{{frame.rowNumber}}"></nz-option>
       </nz-select>
     </div>
     <div class="row">
       <p class="title">选择蔬菜</p>
       <nz-select style="width: 120px;" [(ngModel)]="taskForm.vegetable" nzAllowClear nzPlaceHolder="选择蔬菜">
-        <nz-option *ngFor="let vegetable of vegetableList;let i = index;" [nzValue]="vegetable" [nzLabel]="vegetable"></nz-option>
+        <nz-option *ngFor="let vegetable of vegetableList;let i = index;" [nzValue]="vegetable.value" [nzLabel]="vegetable.text">
+        </nz-option>
       </nz-select>
     </div>
 

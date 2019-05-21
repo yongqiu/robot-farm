@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isNullOrUndefined } from 'util';
 import { RequestService } from '../../service/request.service';
-import { TaskModel } from 'src/app/service/task/task.model';
+import { ITaskViewModel, VEGETABLES } from 'src/app/service/task/task.model';
 import { TaskService } from 'src/app/service/task/task.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as moment from 'moment';
@@ -17,10 +17,10 @@ export class ProductComponent implements OnInit {
   dataSet = [];
   // i = 1;
   editCache = {};
-  taskForm: TaskModel;
+  taskForm: ITaskViewModel = {};
   frameList: any = [];
   gutterList: any = [];
-  vegetableList: Array<string> = ['青菜', '土豆', '玉米'];
+  vegetableList: Array<any> = [];
   createTaskView: boolean = false;
   actionList: any = [];
   // 模拟
@@ -29,7 +29,14 @@ export class ProductComponent implements OnInit {
     port: ''
   }
   constructor(private reqSev: RequestService, public taskSev: TaskService, public message: NzMessageService) {
-
+    for (const key in VEGETABLES) {
+      if (VEGETABLES.hasOwnProperty(key)) {
+        const element = VEGETABLES[key];
+        if (typeof element == 'number') {
+          this.vegetableList.push({ value: element, text: VEGETABLES[element] })
+        }
+      }
+    }
   }
 
   async analogMoveTask() {
@@ -62,12 +69,7 @@ export class ProductComponent implements OnInit {
   }
 
   async create() {
-    this.taskForm = new TaskModel({
-      type: 1,
-      gutterNumber: 'c-1',
-      vegetable: '青菜',
-      direction: 1
-    })
+    this.taskForm.direction = 1;
     let res = await this.reqSev.queryServer({ url: '/api/GetAllFRAME', method: 'get' }, {})
     if (res.success) {
       this.frameList = res.data
@@ -102,14 +104,14 @@ export class ProductComponent implements OnInit {
     if (res.success) {
       this.taskSev.taskList = [];
       res.data.forEach(element => {
-        this.taskSev.taskList.push(new TaskModel(element))
+        this.taskSev.taskList.push(element)
       });
       console.log(this.taskSev.taskList)
     }
   }
 
   editTask(item) {
-    this.taskForm = new TaskModel(item);
+    this.taskForm = item;
     this.createTaskView = true;
     console.log(this.taskForm)
   }

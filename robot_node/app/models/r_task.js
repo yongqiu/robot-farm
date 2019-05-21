@@ -1,50 +1,56 @@
 module.exports = (sequelize, DataTypes) => {
   const r_task = sequelize.define('r_task', {
-    id: {
+    Id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    type: {
+    Type: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    frameNumber: {
+    FrameNumber: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: { msg: "You must enter frameNumber" }
       }
     },
-    gutterNumber: {
+    GutterNumber: {
       type: DataTypes.STRING(50),
     },
-    plateNumber: {
+    PlateNumber: {
       type: DataTypes.STRING(50),
     },
-    vegetable: {
+    Vegetable: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: { msg: "You must enter vegetable" }
       }
     },
-    direction: {
+    Status: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    status: {
+    CreatedAt: {
       type: DataTypes.INTEGER
     },
-    isFinished: {
+    UpdatedAt: {
       type: DataTypes.INTEGER
     },
-    createdAt: {
-      type: DataTypes.INTEGER
+    Direction: {
+      type: DataTypes.INTEGER,
     },
-    updatedAt: {
-      type: DataTypes.INTEGER
+    IsFinished: {
+      type: DataTypes.INTEGER,
+    },
+    IsActive: {
+      type: DataTypes.INTEGER,
+    },
+    TaskGroupId: {
+      type: DataTypes.INTEGER,
     }
   });
 

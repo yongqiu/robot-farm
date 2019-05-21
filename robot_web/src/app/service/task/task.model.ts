@@ -31,29 +31,18 @@ export class AgvModel {
     (!isNullOrUndefined(param.RackContent)) && (this.RackContent = param.RackContent);
   }
 }
-export class TaskModel {
-  id: number;
-  type: number;
-  frameNumber: string;
-  gutterNumber: string;
-  vegetable: string;
-  direction: number;
-  createdAt: number;
-  updateAt: number;
-  isFinished: boolean = false;
-  r_frame: any;
-  constructor(param) {
-    (!isNullOrUndefined(param.id)) && (this.id = param.id);
-    (!isNullOrUndefined(param.type)) && (this.type = param.type);
-    (!isNullOrUndefined(param.frameNumber)) && (this.frameNumber = param.frameNumber);
-    (!isNullOrUndefined(param.gutterNumber)) && (this.gutterNumber = param.gutterNumber);
-    (!isNullOrUndefined(param.vegetable)) && (this.vegetable = param.vegetable);
-    (!isNullOrUndefined(param.direction)) && (this.direction = param.direction);
-    (!isNullOrUndefined(param.createdAt)) && (this.createdAt = param.createdAt);
-    (!isNullOrUndefined(param.updateAt)) && (this.updateAt = param.updateAt);
-    (!isNullOrUndefined(param.isFinished)) && (this.isFinished = param.isFinished);
-    (!isNullOrUndefined(param.r_frame)) && (this.r_frame = param.r_frame);
-  }
+export interface ITaskViewModel {
+  id?: number;
+  type?: number;
+  frameNumber?: string;
+  gutterNumber?: string;
+  vegetable?: string;
+  direction?: 1 | 2;
+  createdAt?: number;
+  updateAt?: number;
+  isFinished?: boolean;
+  r_frame?: any;
+  [name: string]: any;
 }
 
 export class MoveActionModel {
@@ -71,4 +60,27 @@ export class MoveActionModel {
     (!isNullOrUndefined(param.DestPort)) && (this.DestPort = param.DestPort);
     (!isNullOrUndefined(param.createdAt)) && (this.createdAt = param.createdAt);
   }
+}
+
+export interface ITask {
+  // 任务id
+  TaskID: number;
+  // 任务类型 1：工作；2：充电
+  TaskType: 1 | 2;
+  // AGV名字
+  AGVName: string;
+  // 开始位置
+  SourcePort: string;
+  // 目标位置
+  DestPort: string;
+  // 是否已经读取 0:未读取；1：已读取
+  IsRead: 0 | 1;
+  // 任务执行时间
+  TaskTime: Date
+}
+
+export enum VEGETABLES {
+  '土豆',
+  '青菜',
+  '豆芽'
 }
