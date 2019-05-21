@@ -5,6 +5,7 @@ const ERROR = require('../../config/errorCode');
 module.exports = {
   // 创建task
   async create(req, res) {
+    console.log(req.body)
     let createdAt = Date.parse(new Date()) / 1000;
     let status = await r_task.create({
       Type: req.body.type,

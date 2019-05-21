@@ -8,7 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     Type: {
       type: DataTypes.INTEGER,
-      allowNull: false
     },
     FrameNumber: {
       type: DataTypes.STRING,
@@ -32,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     Status: {
       type: DataTypes.INTEGER,
-      allowNull: false
     },
     CreatedAt: {
       type: DataTypes.INTEGER
