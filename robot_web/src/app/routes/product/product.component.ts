@@ -5,6 +5,7 @@ import { ITaskViewModel, VEGETABLES } from 'src/app/service/task/task.model';
 import { TaskService } from 'src/app/service/task/task.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as moment from 'moment';
+import { TaskRequestService } from 'src/app/service/task/task.request';
 
 
 
@@ -28,7 +29,10 @@ export class ProductComponent implements OnInit {
     name: '',
     port: ''
   }
-  constructor(private reqSev: RequestService, public taskSev: TaskService, public message: NzMessageService) {
+
+  taskList: ITaskViewModel[] = [];
+  public vege = VEGETABLES;
+  constructor(private taskReqServ: TaskRequestService, public taskSev: TaskService, public message: NzMessageService) {
     for (const key in VEGETABLES) {
       if (VEGETABLES.hasOwnProperty(key)) {
         const element = VEGETABLES[key];
@@ -39,85 +43,82 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  async analogMoveTask() {
-    let res = await this.reqSev.queryServer({ url: '/api/GetLastMove', method: 'get' }, {});
-    let data = res.data;
-    this.message.info(`获取到移动任务：-${data.AGVName}-由-${data.SourcePort}-移动到-${data.DestPort}-`)
-  }
+  // async analogMoveTask() {
+  //   let res = await this.reqSev.queryServer({ url: '/api/GetLastMove', method: 'get' }, {});
+  //   let data = res.data;
+  //   this.message.info(`获取到移动任务：-${data.AGVName}-由-${data.SourcePort}-移动到-${data.DestPort}-`)
+  // }
 
   async analogMoveAction() {
     let param = {
       AgvName: this.moveAction.name,
       Rfid: this.moveAction.port,
     }
-    let res = await this.reqSev.queryServer({ url: '/api/PostAllAgvInfo', method: 'post' }, param);
+    let res = await this.taskReqServ.updateAgvInfo(param);
     if (!res) {
       this.message.error(`未找到agv：${this.moveAction.name}`)
     }
   }
 
   ngOnInit(): void {
-    // for (let i = 0; i < 108; i++) {
-    //   this.frameList.push(`zpj-${i + 1}`);
-    // }
-
     for (let i = 0; i < 19; i++) {
       this.gutterList.push(`c-${i + 1}`)
     }
-    // this.updateEditCache()
-    this.getTaskList()
+    this.getFrameList();
+    this.getTaskList();
   }
 
-  async create() {
-    this.taskForm.direction = 1;
-    let res = await this.reqSev.queryServer({ url: '/api/GetAllFRAME', method: 'get' }, {})
+  async getFrameList() {
+    let res = await this.taskReqServ.getFrameList();
     if (res.success) {
       this.frameList = res.data
     } else {
       this.frameList = [];
     }
-    console.log(this.frameList)
+  }
+
+  async create() {
+    this.taskForm.direction = 1;
     this.createTaskView = true;
   }
 
   async submit() {
     console.log(this.taskForm)
     if (this.taskForm.id) {
-      let res = await this.reqSev.queryServer({ url: '/api/UpdateTask', method: 'post' }, this.taskForm);
+      let res = await this.taskReqServ.updateTask(this.taskForm);
       if (res.success) {
         await this.getTaskList();
         this.createTaskView = false;
       }
-      console.log(res)
     } else {
-      let res = await this.reqSev.queryServer({ url: '/api/PostTask', method: 'post' }, this.taskForm);
+      let res = await this.taskReqServ.createTask(this.taskForm);
       if (res.success) {
         await this.getTaskList();
         this.createTaskView = false;
       }
-      console.log(res)
     }
   }
 
   async getTaskList() {
-    let res = await this.reqSev.queryServer({ url: '/api/GetAllTask', method: 'get' }, {});
+    let res = await this.taskReqServ.getTaskList();
     if (res.success) {
-      this.taskSev.taskList = [];
+      this.taskList = [];
       res.data.forEach(element => {
-        this.taskSev.taskList.push(element)
+        this.taskList.push(element)
       });
-      console.log(this.taskSev.taskList)
+      console.log(this.taskList)
     }
   }
 
   editTask(item) {
-    this.taskForm = item;
+    console.log(item)
+    this.taskForm = JSON.parse(JSON.stringify(item));
     this.createTaskView = true;
-    console.log(this.taskForm)
   }
 
   startTask() {
-    console.log(this.taskSev.taskList)
+    this.taskSev.taskList = this.taskList;
+    this.taskSev.startTask()
 
   }
 

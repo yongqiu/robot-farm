@@ -81,6 +81,7 @@ export class TaskService {
    * 开始任务
    */
   async startTask() {
+    debugger;
     this.A_agv_EventEmitter = new EventEmitter();
     this.B_agv_EventEmitter = new EventEmitter();
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {
@@ -96,21 +97,55 @@ export class TaskService {
       SourcePort: startPort,
       DestPort: endPort
     }
+    ///////////////调用agv移动接口///////////////
     let res = await this.taskReqSev.postAgvMoveAction(param)
     if (!res) {
       return;
     }
+    this.taskReqSev.updateAgvInfo({
+      AgvName: this.A_agv.AgvName,
+      IsActive: 1
+    })
     //////////////////监听agv位置///////////////
-    this.log(`A型agv由${startPort}移动到${endPort}`)
-    this.A_agv_EventEmitter.subscribe(ele => {
-      this.A_agv = ele[0]
-      this.message.info(`A型agv行进到${this.A_agv.Rfid}`)
-      if (this.A_agv.Rfid == endPort) {
-        this.log('A型agv已经到达目标点')
-        this.A_agv_EventEmitter.complete()
-        this.findenableB_agv(targetFrame);
-      }
-    });
+    this.log(`BRAGV由${startPort}移动到${endPort}`)
+    console.log(`BRAGV由${startPort}移动到${endPort}`)
+
+    let ragv = await this.listenAgvRfid(this.A_agv.AgvName, endPort);
+    if (ragv) {
+      this.log(`BRAGV已到达${endPort}`)
+      await this.taskReqSev.updateAgvInfo({
+        AgvName: ragv.AgvName,
+        IsActive: 0
+      })
+    }
+
+    this.findenableB_agv(targetFrame);
+
+
+
+    // this.A_agv_EventEmitter.subscribe(ele => {
+    //   this.A_agv = ele[0]
+    //   this.message.info(`A型agv行进到${this.A_agv.Rfid}`)
+    //   if (this.A_agv.Rfid == endPort) {
+    //     this.log('A型agv已经到达目标点')
+    //     this.A_agv_EventEmitter.complete()
+    //     this.findenableB_agv(targetFrame);
+    //   }
+    // });
+  }
+
+  listenAgvRfid(agvName, endPort): Promise<AgvModel> {
+    let that = this;
+    return new Promise(function (resolve, reject) {
+      let timer = setInterval(async () => {
+        let res = await that.taskReqSev.getAgvHistoryInfo(agvName);
+        console.log("等待移动中")
+        if (res.Rfid == endPort) {
+          clearInterval(timer);
+          resolve(res);
+        }
+      }, 3000);
+    })
   }
 
 
@@ -126,52 +161,81 @@ export class TaskService {
     this.B_agv_active = this.agvList[finderIndex];
     let startPort = this.B_agv_active.Rfid;
     let endPort = targetFrame.stopAgv2;
-    this.log(`B型agv${this.agvList[finderIndex].AgvName}由${startPort}移动到${endPort}`)
+    this.log(`RAGV(${this.B_agv_active.AgvName})由${startPort}移动到${endPort}`)
     ////////////////执行移动命令/////////////////
-    this.B_agv_EventEmitter.subscribe(ele => {
-      this.B_agv_active = ele[finderIndex];
-      this.message.info(`B型agv行进到${this.B_agv_active.Rfid}`)
-      if (this.B_agv_active.Rfid == endPort) {
-        this.log('B型agv已经到达目标点');
-        this.log('B型agv开始上架');
-        this.B_agv_EventEmitter.complete()
-        ///////////////执行抓取命令//////////////
-        this.agvCatching(this.B_agv_active.RackContent)
-      }
-    });
+    let ragv = await this.listenAgvRfid(this.B_agv_active.AgvName, endPort);
+    if (ragv) {
+      this.log(`RAGV(${this.B_agv_active.AgvName})已到达${endPort} `)
+      this.agvCatching(this.B_agv_active.RackContent)
+    }
+
+
+    // this.B_agv_EventEmitter.subscribe(ele => {
+    //   this.B_agv_active = ele[finderIndex];
+    //   this.message.info(`B型agv行进到${ this.B_agv_active.Rfid } `)
+    //   if (this.B_agv_active.Rfid == endPort) {
+    //     this.log('B型agv已经到达目标点');
+    //     this.log('B型agv开始上架');
+    //     this.B_agv_EventEmitter.complete()
+    //     ///////////////执行抓取命令//////////////
+    //     this.agvCatching(this.B_agv_active.RackContent)
+    //   }
+    // });
   }
 
   async agvCatching(RackContent) {
-    let res = await this.postCatch(RackContent);
+    let res = await this.upCatch(RackContent);
     console.log(res)
+  }
+
+  async upCatch(RackContentNumber): Promise<any> {
+    if (RackContentNumber < 12) {
+      for (let index = 0; index < 3; index++) {
+        let that = this;
+        setTimeout(async () => {
+          let param = {
+            AgvName: this.B_agv_active.AgvName,
+            RackContent: RackContentNumber + 1
+          }
+          let res = await that.taskReqSev.updateAgvInfo(param);
+          let RackContent = res.data.RackContent;
+          if (res.success) {
+            that.message.success(`第${index + 1}抓取成功, 当前料架剩余${RackContent} `)
+          }
+        }, 2000);
+      }
+    } else {
+      this.log('B型agv返回充电');
+      // this.startTask()
+    }
   }
 
   /**
    * 抓取成功
    * @param text 
    */
-  async postCatch(RackContentNumber): Promise<any> {
+  // async postCatch(RackContentNumber): Promise<any> {
 
-    if (RackContentNumber > 0) {
-      let param = {
-        AgvName: this.B_agv_active.AgvName,
-        RackContent: RackContentNumber - 1
-      }
-      console.log(param)
-      let res = await this.taskReqSev.updateAgvInfo(param);
-      // console.log(res.data)
-      let RackContent = res.data.RackContent;
-      if (res.success) {
-        this.message.success(`抓取成功,当前料架剩余${RackContent}`)
-      }
-      setTimeout(() => {
-        this.postCatch(RackContent)
-      }, 2000);
-    } else {
-      this.log('B型agv返回充电');
-      this.startTask()
-    }
-  }
+  //   if (RackContentNumber > 0) {
+  //     let param = {
+  //       AgvName: this.B_agv_active.AgvName,
+  //       RackContent: RackContentNumber - 1
+  //     }
+  //     console.log(param)
+  //     let res = await this.taskReqSev.updateAgvInfo(param);
+  //     // console.log(res.data)
+  //     let RackContent = res.data.RackContent;
+  //     if (res.success) {
+  //       this.message.success(`抓取成功, 当前料架剩余${RackContent} `)
+  //     }
+  //     setTimeout(() => {
+  //       this.postCatch(RackContent)
+  //     }, 2000);
+  //   } else {
+  //     this.log('B型agv返回充电');
+  //     this.startTask()
+  //   }
+  // }
 
   log(text: string) {
     this.actionList.push(text)
@@ -198,6 +262,7 @@ export class TaskService {
       }
     });
   }
+
 
 
 }

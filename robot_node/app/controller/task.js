@@ -8,14 +8,14 @@ module.exports = {
     console.log(req.body)
     let createdAt = Date.parse(new Date()) / 1000;
     let status = await r_task.create({
-      Type: req.body.type,
-      FrameNumber: req.body.frameNumber,
-      GutterNumber: req.body.gutterNumber,
-      Vegetable: req.body.vegetable,
-      Direction: req.body.direction,
-      CreatedAt: createdAt,
-      UpdatedAt: createdAt,
-      TaskGroupId: req.body.TaskGroupId
+      type: req.body.type,
+      frameNumber: req.body.frameNumber,
+      gutterNumber: req.body.gutterNumber,
+      vegetable: req.body.vegetable,
+      direction: req.body.direction,
+      createdAt: createdAt,
+      updatedAt: createdAt,
+      taskGroupId: req.body.taskGroupId
     }).catch(error => res.status(ERROR.BaseError).send(error));
     res.status(200).send({ success: true, data: status });
   },

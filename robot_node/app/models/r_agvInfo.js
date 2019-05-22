@@ -52,6 +52,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     RackContent: {
       type: DataTypes.INTEGER.UNSIGNED
+    },
+    IsActive: {
+      type: DataTypes.INTEGER.UNSIGNED
     }
   });
 

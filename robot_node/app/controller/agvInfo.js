@@ -47,6 +47,7 @@ module.exports = {
       Alarm: req.body.Alarm != undefined ? req.body.Alarm : status.dataValues.Alarm,
       RunTimes: req.body.RunTimes != undefined ? req.body.RunTimes : status.dataValues.RunTimes,
       RackContent: req.body.RackContent != undefined ? req.body.RackContent : status.dataValues.RackContent,
+      IsActive: req.body.IsActive != undefined ? req.body.IsActive : status.dataValues.IsActive,
       updatedAt: updatedAt
     }
     if (status) {

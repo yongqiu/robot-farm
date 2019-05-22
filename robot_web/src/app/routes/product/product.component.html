@@ -1,15 +1,15 @@
 <div class="card-container">
   <!-- <p>
     <a href="javascript:;" (click)="analogMoveTask()">模拟agv获取位移任务</a>
-  </p>
+  </p> -->
   <p>
     <input nz-input placeholder="agvName" style="width:100px" [(ngModel)]="moveAction.name">
     <input nz-input placeholder="当前位置" style="width:100px" [(ngModel)]="moveAction.port">
     <a href="javascript:;" (click)="analogMoveAction()">模拟agv执行位移动作</a>
-  </p> -->
+  </p>
   <p>
     <button class="add" nz-button nzType="primary" (click)="create()">新增任务</button>
-    <button class="delete" nz-button nzType="primary" (click)="taskSev.startTask()">执行任务</button>
+    <button class="delete" nz-button nzType="primary" (click)="startTask()">执行任务</button>
     <!-- <button class="delete" nz-button nzType="danger">删除任务</button> -->
   </p>
   <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
@@ -18,13 +18,15 @@
         <div nz-row>
           <div nz-col nzSpan="18">
             <div class="table-panel">
-              <nz-table #upTable nzBordered [nzData]="taskSev.taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
+              <nz-table #upTable nzBordered [nzData]="taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
                 <thead>
                   <tr>
                     <th nzWidth="50px" nzLeft="0px"></th>
                     <th nzWidth="100px">序号</th>
-                    <th nzWidth="100px">操作类型</th>
+                    <th nzWidth="100px">类型</th>
                     <th nzWidth="100px">架号</th>
+                    <th nzWidth="100px">BAGV停靠点</th>
+                    <th nzWidth="100px">RAGV停靠点</th>
                     <th nzWidth="100px">上架蔬菜</th>
                     <th nzWidth="200px">上架日期</th>
                     <th nzWidth="100px" nzRight="0px">操作</th>
@@ -37,13 +39,19 @@
                       {{i+1}}
                     </td>
                     <td>
-                      {{data.type |taskPipe:'type'}}
+                      {{data.direction |taskPipe:'direction'}}
+                    </td>
+                    <td>
+                      {{data.r_frame.stopAgv1}}
+                    </td>
+                    <td>
+                      {{data.r_frame.stopAgv1}}
                     </td>
                     <td>
                       zpj-{{data.r_frame.colNumber}}-{{data.r_frame.rowNumber}}
                     </td>
                     <td>
-                      {{data.vegetable}}
+                      {{vege[data.vegetable]}}
                     </td>
                     <td>
                       {{data.createdAt | dateTimePipe:'unix'}}
@@ -63,60 +71,6 @@
             <p *ngFor="let action of taskSev.actionList">{{action}}</p>
           </div>
         </div>
-
-
-      </div>
-    </nz-tab>
-    <nz-tab nzTitle="下架任务">
-      <div class="downtable">
-        <p>
-          本日计划下架50个，已完成30个，剩余20个
-          <button class="add" nz-button nzType="primary">新增任务</button>
-          <button class="delete" nz-button nzType="danger">删除任务</button>
-        </p>
-        <nz-table #downTable nzBordered [nzData]="dataSet" [nzPageSize]="8">
-          <thead>
-            <tr>
-              <th nzWidth="5%"></th>
-              <th nzWidth="5%">序号</th>
-              <th nzWidth="10%">操作类型</th>
-              <th nzWidth="10%">架号</th>
-              <th nzWidth="10%">槽号</th>
-              <th nzWidth="10%">上架蔬菜</th>
-              <th nzWidth="10%">上架日期</th>
-              <th nzWidth="5%">操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of downTable.data;let i = index">
-              <td nzShowCheckbox [(nzChecked)]="data.checked"></td>
-              <td>
-                {{i+1}}
-              </td>
-              <td>
-                {{data.type}}
-              </td>
-              <td>
-                {{data.frameNumber}}
-              </td>
-              <td>
-                {{data.gutter}}
-              </td>
-              <td>
-                {{data.vegetable}}
-              </td>
-              <td>
-                {{data.createdAt}}
-              </td>
-              <td>
-                <div>
-                  <a (click)="startEdit(data.key)">编辑</a>
-                  <a (click)="saveEdit(data.key)">保存</a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
       </div>
     </nz-tab>
   </nz-tabset>
@@ -140,7 +94,8 @@
     <div class="row">
       <p class="title">选择蔬菜</p>
       <nz-select style="width: 120px;" [(ngModel)]="taskForm.vegetable" nzAllowClear nzPlaceHolder="选择蔬菜">
-        <nz-option *ngFor="let vegetable of vegetableList;let i = index;" [nzValue]="vegetable.value" [nzLabel]="vegetable.text">
+        <nz-option *ngFor="let vegetable of vegetableList;let i = index;" [nzValue]="vegetable.value"
+          [nzLabel]="vegetable.text">
         </nz-option>
       </nz-select>
     </div>

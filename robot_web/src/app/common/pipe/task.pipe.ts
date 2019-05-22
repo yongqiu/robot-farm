@@ -7,7 +7,7 @@ import * as moment from 'moment';
 export class TaskPipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    if(args == 'type'){
+    if (args == 'type') {
       switch (value) {
         case 1:
           return '普通任务';
@@ -18,7 +18,17 @@ export class TaskPipe implements PipeTransform {
       }
     }
 
-    
+    if (args == 'direction') {
+      switch (value) {
+        case 1:
+          return '上架';
+        case 2:
+          return '下架';
+        default:
+          return '上架';
+      }
+    }
+
   }
 
 }
