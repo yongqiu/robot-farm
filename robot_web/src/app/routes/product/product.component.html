@@ -9,7 +9,7 @@
   </p>
   <p>
     <button class="add" nz-button nzType="primary" (click)="create()">新增任务</button>
-    <button class="delete" nz-button nzType="primary" (click)="startTask()">执行任务</button>
+    <button class="delete" nz-button nzType="primary" (click)="startTask()">执行任务列表</button>
     <!-- <button class="delete" nz-button nzType="danger">删除任务</button> -->
   </p>
   <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
@@ -18,12 +18,12 @@
         <div nz-row>
           <div nz-col nzSpan="18">
             <div class="table-panel">
-              <nz-table #upTable nzBordered [nzData]="taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
+              <nz-table #upTable nzBordered [nzData]="taskSev.taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
                 <thead>
                   <tr>
                     <th nzWidth="50px" nzLeft="0px"></th>
-                    <th nzWidth="100px">序号</th>
-                    <th nzWidth="100px">类型</th>
+                    <th nzWidth="100px">任务id</th>
+                    <th nzWidth="100px">状态</th>
                     <th nzWidth="100px">架号</th>
                     <th nzWidth="100px">BAGV停靠点</th>
                     <th nzWidth="100px">RAGV停靠点</th>
@@ -36,19 +36,19 @@
                   <tr *ngFor="let data of upTable.data;let i = index">
                     <td nzShowCheckbox [(nzChecked)]="data.checked" nzLeft="0px"></td>
                     <td>
-                      {{i+1}}
+                      {{data.id}}
                     </td>
                     <td>
-                      {{data.direction |taskPipe:'direction'}}
-                    </td>
-                    <td>
-                      {{data.r_frame.stopAgv1}}
-                    </td>
-                    <td>
-                      {{data.r_frame.stopAgv1}}
-                    </td>
+                      {{data.isFinished |taskPipe:'isFinished'}}
+                    </td>    
                     <td>
                       zpj-{{data.r_frame.colNumber}}-{{data.r_frame.rowNumber}}
+                    </td>
+                    <td>
+                      {{data.r_frame.stopAgv1}}
+                    </td>
+                    <td>
+                      {{data.r_frame.stopAgv1}}
                     </td>
                     <td>
                       {{vege[data.vegetable]}}
@@ -59,7 +59,7 @@
                     <td nzRight="0px">
                       <div>
                         <a (click)="editTask(data)">编辑</a>
-                        <a (click)="startTask(data)">执行</a>
+
                       </div>
                     </td>
                   </tr>

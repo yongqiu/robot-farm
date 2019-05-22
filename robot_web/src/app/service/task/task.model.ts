@@ -15,6 +15,7 @@ export class AgvModel {
   startPort: string;
   endPort: string;
   RackContent: number;
+  IsActive:number;
   constructor(param?) {
     (!isNullOrUndefined(param.AgvName)) && (this.AgvName = param.AgvName);
     (!isNullOrUndefined(param.RackNumBer)) && (this.RackNumBer = param.RackNumBer);
@@ -29,6 +30,7 @@ export class AgvModel {
     (!isNullOrUndefined(param.startPort)) && (this.startPort = param.startPort);
     (!isNullOrUndefined(param.endPort)) && (this.endPort = param.endPort);
     (!isNullOrUndefined(param.RackContent)) && (this.RackContent = param.RackContent);
+    (!isNullOrUndefined(param.IsActive)) && (this.IsActive = param.IsActive);
   }
 }
 export interface ITaskViewModel {
@@ -40,7 +42,7 @@ export interface ITaskViewModel {
   direction?: 1 | 2;
   createdAt?: number;
   updateAt?: number;
-  isFinished?: boolean;
+  isFinished?: number;
   r_frame?: any;
   [name: string]: any;
 }

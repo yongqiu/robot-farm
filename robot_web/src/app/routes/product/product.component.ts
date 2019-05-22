@@ -107,6 +107,7 @@ export class ProductComponent implements OnInit {
         this.taskList.push(element)
       });
       console.log(this.taskList)
+      this.taskSev.taskList = this.taskList;
     }
   }
 
