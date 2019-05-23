@@ -1,6 +1,40 @@
 import { Injectable } from "@angular/core";
 import { RequestService } from "../request.service";
 import { MoveActionModel, ITaskViewModel, AgvModel } from "./task.model";
+import { AGV_URL } from "src/app/config";
+
+interface IPostTask {
+    TaskID: number,
+    TaskType: number,
+    AGVName: string,
+    SourcePort: string,
+    DestPort: string,
+    IsRead: string,
+    TaskTime: string
+}
+
+interface IPostAction {
+    ActionID: number,
+    ActionType: number,
+    AGVName: string,
+    UpOrDown: number,
+    IsRead: number,
+    ActionTime: Date
+}
+
+interface IAgvInfo {
+    AgvName: string,
+    RackNumBer: string,
+    Rfid: number,
+    Speed: number,
+    Voltage: number,
+    Status: number,
+    RunStatus: number,
+    BatteryNum: number,
+    Alarm: string,
+    RunTimes: number,
+    IsOnline: number
+}
 
 @Injectable()
 export class TaskRequestService {
@@ -49,7 +83,7 @@ export class TaskRequestService {
      * @param param 
      */
     async createTask(param: ITaskViewModel) {
-        let res = await this.reqSev.queryServer({ url: '/api/PostTask', method: 'post' }, param);
+        let res = await this.reqSev.queryServer({ url: '/api/CreateTask', method: 'post' }, param);
         return res;
     }
 
@@ -74,8 +108,28 @@ export class TaskRequestService {
         return res;
     }
 
+    /**
+     * getFrameList
+     * @returns
+     * @memberof TaskRequestService
+     */
     async getFrameList() {
         let res = await this.reqSev.queryServer({ url: '/api/GetAllFRAME', method: 'get' }, {})
+        return res;
+    }
+
+    async agvpostTask(postTask: IPostTask) {
+        let res = await this.reqSev.queryServer({ url: AGV_URL + '/PostTask', method: 'post' }, postTask)
+        return res;
+    }
+
+    async agvpostAction(postAction: IPostAction) {
+        let res = await this.reqSev.queryServer({ url: AGV_URL + '/PostAction', method: 'post' }, postAction)
+        return res;
+    }
+
+    async getAllAgvInfo(): Promise<Array<IAgvInfo>> {
+        let res = await this.reqSev.queryServer({ url: AGV_URL + '/GetAllAgvInfo', method: 'get' }, {})
         return res;
     }
 }

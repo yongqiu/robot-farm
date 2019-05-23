@@ -81,7 +81,6 @@ export class TaskService {
    * 开始任务
    */
   async startTask() {
-    debugger;
     this.A_agv_EventEmitter = new EventEmitter();
     this.B_agv_EventEmitter = new EventEmitter();
     let firstUnfinishTaskIndex = this.taskList.findIndex(task => {

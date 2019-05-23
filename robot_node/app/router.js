@@ -5,11 +5,13 @@ const MOVE = require('./controller/action_move');
 const TASK = require('./controller/task');
 const FRAME = require('./controller/frame');
 
+// 执行更新AGV AGV.createAgvInfoList()
+
 module.exports = (app) => {
     // app.use('/api/robot', require('./routes/api_robot'));
     // app.use('/', require('./routes/index.js'))
     app.get('/', socketTest.view);
-    app.post('/message', socketTest.create);
+    app.get('/agv/GetAllTask', socketTest.GetAllAgvInfo);
     app.get('/getRole', socketTest.roleTest);
     // start
     app.post('/api/role/create', USER.postRoleInfo);
@@ -34,7 +36,7 @@ module.exports = (app) => {
     app.get('/api/GetMove', MOVE.getTaskByID);
     app.get('/api/GetLastMove', MOVE.getLastTask);      // agv获取移动动作的接口
     // task
-    app.post('/api/PostTask', TASK.create);
+    app.post('/api/CreateTask', TASK.create);
     app.get('/api/GetAllTask', TASK.getList);
     app.post('/api/UpdateTask', TASK.update);       // agv更新信息的接口
     app.get('/api/GetTask', TASK.getTaskByID);

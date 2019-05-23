@@ -37,8 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     Alarm: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
+      type: DataTypes.STRING(255)
     },
     RunTimes: {
       type: DataTypes.INTEGER.UNSIGNED,

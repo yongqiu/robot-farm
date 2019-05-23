@@ -16,11 +16,25 @@ module.exports = {
   async roleTest(req, res) {
     let roles = await r_role.findAll();
     res.status(200).json({ data: roles })
-    // return r_role
-    //   .findAll()
-    //   .then(roleItem => {
-    //     res.status(200).json({ data: roleItem })
-    //   })
-    //   .catch(error => res.status(400).send(error));
+  },
+  async GetAllAgvInfo(req, res) {
+    let agvNames = ['AGV01', 'AGV02', 'AGV03', 'AGV04']
+    let agvList = [];
+    agvNames.forEach(item => {
+      agvList.push({
+        AgvName: item,
+        RackNumBer: '101',
+        Rfid: 1,
+        Speed: 1,
+        Voltage: 20,
+        Status: 1,
+        RunStatus: 1,
+        BatteryNum: 5,
+        Alarm: 'fjdskljflksdj',
+        RunTimes: 2,
+        IsOnline: 3
+      })
+    })
+    res.status(200).json(agvList)
   }
 };
