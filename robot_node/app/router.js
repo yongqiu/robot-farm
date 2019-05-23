@@ -5,14 +5,23 @@ const MOVE = require('./controller/action_move');
 const TASK = require('./controller/task');
 const FRAME = require('./controller/frame');
 
-// 执行更新AGV AGV.createAgvInfoList()
+// 定时开启
+socketTest.RefreshAllAgvInfo()
 
 module.exports = (app) => {
     // app.use('/api/robot', require('./routes/api_robot'));
     // app.use('/', require('./routes/index.js'))
     app.get('/', socketTest.view);
-    app.get('/agv/GetAllTask', socketTest.GetAllAgvInfo);
     app.get('/getRole', socketTest.roleTest);
+
+
+    // 假接口
+    app.post('/agv/PostTaskMy', socketTest.PostTaskMy);
+    app.post('/agv/PostActionMy', socketTest.PostActionMy);
+    // 使用接口
+    app.get('/api/RefreshAllAgvInfo', socketTest.RefreshAllAgvInfo);  // 这个自动
+    app.post('/api/PostTask', socketTest.PostTask);
+    app.post('/api/PostAction', socketTest.PostAction);
     // start
     app.post('/api/role/create', USER.postRoleInfo);
     app.post('/api/role/update', USER.postRoleInfo);
@@ -26,7 +35,7 @@ module.exports = (app) => {
     app.delete('/api/user/delete', USER.deleteUser);
     app.get('/api/user/getbyId', USER.getUserbyId);
     //agv
-    app.post('/api/GetAllAgvInfo', AGV.sendAgvInfo);
+    app.get('/api/GetAllAgvInfo', AGV.getAllAgvInfo);
     app.get('/api/getAgvbyName', AGV.findByAgvName);
     app.post('/api/PostAllAgvInfo', AGV.update)
     // move

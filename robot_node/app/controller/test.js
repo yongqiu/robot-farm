@@ -1,6 +1,7 @@
 var express = require('express');
 const r_role = require('../models').r_role;
-
+const AGV = require('./agvInfo');
+var request = require('request');
 module.exports = {
   create(req, res) {
     // console.log(req.body)
@@ -17,24 +18,45 @@ module.exports = {
     let roles = await r_role.findAll();
     res.status(200).json({ data: roles })
   },
-  async GetAllAgvInfo(req, res) {
-    let agvNames = ['AGV01', 'AGV02', 'AGV03', 'AGV04']
-    let agvList = [];
-    agvNames.forEach(item => {
-      agvList.push({
-        AgvName: item,
-        RackNumBer: '101',
-        Rfid: 1,
-        Speed: 1,
-        Voltage: 20,
-        Status: 1,
-        RunStatus: 1,
-        BatteryNum: 5,
-        Alarm: 'fjdskljflksdj',
-        RunTimes: 2,
-        IsOnline: 3
-      })
-    })
-    res.status(200).json(agvList)
+  async RefreshAllAgvInfo(req, res) {
+    var e = request({
+      url: `http://127.0.0.1:3000/api/GetAllAgvInfo`,
+      method: 'GET',
+    }, async (error, response, body) => {
+      let date = Date.parse(new Date()) / 1000;
+      JSON.parse(body).forEach(async (element) => {
+        AGV.updateAvgInfo(element)
+      });
+    });
+
+    // req.io.sockets.emit("getAgvInfo", { success: true, type: 1, data: req.body });
+    // res.status(200).send({ success: true, data: status });
+  },
+  async PostTaskMy(req, res) {
+    res.status(200).json
+  },
+  async PostTask(req, res) {
+    console.log(req.body)
+    var e = request({
+      url: `http://127.0.0.1:3000/agv/PostTaskMy`,
+      method: 'POST',
+      body: JSON.stringify(req.body)
+      // headers: { 'Content-Type': 'text/json' }
+    }, function (error, response, body) {
+      res.status(200).json({ data: req.body })
+    });
+  },
+  async PostActionMy(req, res) {
+    res.status(200).json
+  },
+  async PostAction(req, res) {
+    var e = request({
+      url: `http://127.0.0.1:3000/agv/PostTaskMy`,
+      method: 'POST',
+      body: JSON.stringify(req.body)
+      // headers: { 'Content-Type': 'text/json' }
+    }, function (error, response, body) {
+      res.status(200).json({ data: req.body })
+    });
   }
 };

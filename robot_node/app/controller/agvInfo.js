@@ -53,6 +53,11 @@ let updateAvgInfo = async (param) => {
 
 
 module.exports = {
+  async getAllAgvInfo(req, res) {
+    let tasks = await r_agvInfo.findAll().catch(error => res.status(ERROR.BaseError).send(error));
+    res.status(200).send(tasks);
+    return res;
+  },
   async sendAgvInfo(req, res) {
     createAgvInfo(req, res)
   },
@@ -81,18 +86,7 @@ module.exports = {
     }).catch(error => res.status(ERROR.BaseError).send(error));
     res.status(200).send({ success: true, data: status });
   },
-  async createAgvInfoList(){
-    var e = request({
-      url: `http://127.0.0.1:3000/agv/GetAllTask`,
-      method: 'GET',
-    }, async (error, response, body) => {
-      let date = Date.parse(new Date()) / 1000;
-      JSON.parse(body).forEach(async (element) => {
-        updateAvgInfo(element)
-      });
-    });
-
-    // req.io.sockets.emit("getAgvInfo", { success: true, type: 1, data: req.body });
-    // res.status(200).send({ success: true, data: status });
+  async updateAvgInfo(param) {
+    updateAvgInfo(param)
   }
 };
