@@ -1,7 +1,7 @@
 <div class="agvPanel" #agvPanel>
   <div nz-row [nzGutter]="24">
     <div nz-col [nzSpan]="12" *ngFor="let agv of taskServ.agvList">
-      <nz-card nzTitle="{{agv.AgvName}}">
+      <nz-card nzTitle="{{agv.AgvName}}" [nzExtra]="extraTemplate">
         <div class="row" nz-row>
           <div class="col1" nz-col nzSpan="12">
             <p><span>料架号：</span>{{agv.RackNumBer}}</p>
@@ -21,6 +21,14 @@
         </div>
 
       </nz-card>
+      <ng-template #extraTemplate>
+        <a (click)="editAgvHandle(agv)">编辑</a>
+      </ng-template>
     </div>
   </div>
 </div>
+
+<nz-modal [(nzVisible)]="editAgv" nzTitle="编辑" (nzOnCancel)="editAgv = false" (nzOnOk)="submit()">
+  <input nz-input placeholder="请输入agv名称" [(ngModel)]="name" />
+   
+</nz-modal>

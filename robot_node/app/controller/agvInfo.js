@@ -63,7 +63,6 @@ module.exports = {
   },
   async update(req, res) {
     let status = await updateAvgInfo(req.body)
-    console.log(status)
     if (status) {
       // status.update(param).catch(error => res.status(ERROR.BaseError).send(error));
       // req.io.sockets.emit("getAgvInfo", { success: true, type: 1, data: param });
@@ -75,6 +74,32 @@ module.exports = {
         message: 'agv Not Found',
       });
     }
+  },
+  async changeName(req, res){
+    let status = await r_agvInfo.findOne({
+      where: {
+        id: req.body.id
+      },
+      order: [['createdAt', 'DESC']]
+    })
+    // let requier = {
+    //   AgvName: req.body.name,
+    //   RackNumBer: status.dataValues.RackNumBer,
+    //   Rfid: status.dataValues.Rfid,
+    //   Speed:  status.dataValues.Speed,
+    //   Voltage:status.dataValues.Voltage,
+    //   Status: status.dataValues.Status,
+    //   RunStatus: status.dataValues.RunStatus,
+    //   BatteryNum:  status.dataValues.BatteryNum,
+    //   Alarm: status.dataValues.Alarm,
+    //   RunTimes: status.dataValues.RunTimes,
+    //   RackContent:status.dataValues.RackContent,
+    //   IsActive:status.dataValues.IsActive,
+    // }
+    status.update({
+      AgvName: req.body.name
+    }).catch(error => res.status(ERROR.BaseError).send(error));
+    res.status(200).send({ success: true, data: require })
   },
   async findByAgvName(req, res) {
     let AgvName = req.query.AgvName;

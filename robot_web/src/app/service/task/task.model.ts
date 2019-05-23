@@ -17,6 +17,7 @@ export class AgvModel {
   RackContent: number;
   IsActive:number;
   constructor(param?) {
+    (!isNullOrUndefined(param.id)) && (this.id = param.id);
     (!isNullOrUndefined(param.AgvName)) && (this.AgvName = param.AgvName);
     (!isNullOrUndefined(param.RackNumBer)) && (this.RackNumBer = param.RackNumBer);
     (!isNullOrUndefined(param.Rfid)) && (this.Rfid = param.Rfid);

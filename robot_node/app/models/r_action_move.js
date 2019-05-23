@@ -35,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        TaskTime: {
+            type: DataTypes.DATE,
+        },
         createdAt: {
             type: DataTypes.INTEGER
         },

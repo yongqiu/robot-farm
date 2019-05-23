@@ -16,7 +16,6 @@ module.exports = {
     },
     async update(req, res) {
         var TaskID = req.body.TaskID;
-        console.log(TaskID)
         let updatedAt = Date.parse(new Date()) / 1000;
         let status = await r_action_move.findOne({
             where: {

@@ -59,7 +59,7 @@
                     <td nzRight="0px">
                       <div>
                         <a (click)="editTask(data)">编辑</a>
-
+                        <a (click)="deleteTask(data)">删除</a>
                       </div>
                     </td>
                   </tr>
@@ -82,6 +82,13 @@
       <nz-radio-group [(ngModel)]="taskForm.direction">
         <label nz-radio [nzValue]="1">上架任务</label>
         <label nz-radio [nzValue]="2">下架任务</label>
+      </nz-radio-group>
+      
+    </div>
+    <div class="row">
+      <nz-radio-group [(ngModel)]="taskForm.plateType">
+        <label nz-radio [nzValue]="1">单盘任务</label>
+        <label nz-radio [nzValue]="2">普通任务</label>
       </nz-radio-group>
     </div>
     <div class="row" *ngIf="frameList.length>0">

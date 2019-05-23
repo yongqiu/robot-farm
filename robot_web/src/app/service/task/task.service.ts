@@ -3,10 +3,11 @@ import * as socketIo from 'socket.io-client';
 import { SOCKET_URL } from 'src/app/config';
 import { RequestService } from '../request.service';
 import { AgvModel, ITaskViewModel } from './task.model';
-import { TaskRequestService } from './task.request';
+import { TaskRequestService, IPostTask, IPostAction } from './task.request';
 import { Observable, of, observable } from 'rxjs';
 import { agvConfig } from './task.config';
 import { NzMessageService } from 'ng-zorro-antd';
+import * as moment from 'moment';
 
 enum RunStatus {
   stop,
@@ -17,6 +18,11 @@ enum IsActive {
   charge,
   working,
   wait
+}
+
+enum TaskType{
+  working = 1,
+  charge
 }
 
 @Injectable({
@@ -44,6 +50,7 @@ export class TaskService {
     }
     this.getAgvList()
     this.initSocket()
+    console.log(moment().toDate().toString())
   }
 
   initSocket(): void {
@@ -100,12 +107,14 @@ export class TaskService {
    * 获取agv历史数据
    */
   async getAgvList() {
-    this.agvList.forEach(async (agv, index) => {
-      let res = await this.taskReqSev.getAgvHistoryInfo(agv.AgvName)
-      if (res) {
-        this.agvList[index] = new AgvModel(res);
-      }
-    })
+    this.agvList = [];
+    let res = await this.taskReqSev.getAllAgvs()
+    console.log(res)
+    if (res.length>0) {
+      res.forEach(async (agv, index) => {
+          this.agvList[index] = new AgvModel(agv);
+      })
+    }
     console.log(this.agvList)
   }
 
@@ -124,12 +133,14 @@ export class TaskService {
     let startPort = this.A_agv.Rfid;
     let endPort = targetFrame.stopAgv1;
     ///////////////调用agv移动接口///////////////
+    this.log(`BAGV(AGV01)调用posttask`)
     await this.agvMove(this.A_agv.AgvName, startPort, endPort)
-    await this.taskReqSev.updateAgvInfo({
+    let aa = {
       AgvName: this.A_agv.AgvName,
       RunStatus: RunStatus.move,
       IsActive: IsActive.working
-    })
+    }
+    await this.taskReqSev.updateAgvInfo(aa)
     //////////////////监听agv位置///////////////
     this.log(`BAGV(AGV01)正在由${startPort}移动到${endPort}`)
 
@@ -143,26 +154,14 @@ export class TaskService {
     }
 
     this.findenableB_agv(targetFrame);
-
-
-
-    // this.A_agv_EventEmitter.subscribe(ele => {
-    //   this.A_agv = ele[0]
-    //   this.message.info(`A型agv行进到${this.A_agv.Rfid}`)
-    //   if (this.A_agv.Rfid == endPort) {
-    //     this.log('A型agv已经到达目标点')
-    //     this.A_agv_EventEmitter.complete()
-    //     this.findenableB_agv(targetFrame);
-    //   }
-    // });
   }
 
   listenAgvRfid(agvName, endPort): Promise<AgvModel> {
     let that = this;
     return new Promise(function (resolve, reject) {
       let timer = setInterval(async () => {
-        let res = await that.taskReqSev.getAgvHistoryInfo(agvName);
-        that.message.info('等待到达（2秒监听一次）')
+        let res = await that.taskReqSev.getAgvByName(agvName);
+        that.message.info('等待'+agvName+'到达'+endPort+'（2秒监听一次）')
         if (res.Rfid == endPort) {
           clearInterval(timer);
           resolve(res);
@@ -186,7 +185,17 @@ export class TaskService {
       // 从充电区找agv
       finder = this.agvList.find(agv => {
         return agv.AgvName != 'AGV01' && agv.IsActive == IsActive.charge && agv.RunStatus == RunStatus.stop
-      }) 
+      })
+      this.log(`RAGV(${finder.AgvName})调用PostAction`)
+      let param: IPostAction = {
+        ActionID: this.currentTask.id,
+        ActionType: 1,
+        AGVName: finder.AgvName,
+        UpOrDown: 1,
+        IsRead: 1,
+        ActionTime: moment().format("YYYY-MM-DD")
+      }
+      await this.taskReqSev.agvpostAction(param)
     }
     this.B_agv_active = finder;
     console.log(finder)
@@ -195,6 +204,7 @@ export class TaskService {
     let endPort = targetFrame.stopAgv2;
     this.log(`RAGV(${this.B_agv_active.AgvName})正在由${startPort}移动到${endPort}`)
     ////////////////执行移动命令/////////////////
+    await this.agvMove(this.B_agv_active.AgvName, startPort, endPort)
     await this.taskReqSev.updateAgvInfo({
       AgvName: this.B_agv_active.AgvName,
       RunStatus: RunStatus.move,
@@ -233,12 +243,16 @@ export class TaskService {
 
   async agvMove(agvName: string, startPort, endPort) {
     ///////////////调用agv移动接口///////////////
-    let param = {
+    let param: IPostTask = {
       AGVName: agvName,
       SourcePort: startPort,
-      DestPort: endPort
+      DestPort: endPort,
+      TaskID: this.currentTask.id,
+      TaskType: TaskType.working,
+      IsRead: 1,
+      TaskTime: moment().format("YYYY-MM-DD")
     }
-    let res = await this.taskReqSev.postAgvMoveAction(param)
+    let res = await this.taskReqSev.agvpostTask(param)
     if (!res) {
       return;
     }
@@ -248,6 +262,7 @@ export class TaskService {
     let array = [1, 2, 3];
     let RackContent = agv.RackContent;
     let res;
+    this.log(`RAGV(${this.B_agv_active.AgvName})调用plc接口`)
     for (const item of array) {
       await this.wait2000sec()
       let param = {
@@ -262,6 +277,7 @@ export class TaskService {
     }
     if (res.data.RackContent == 12) {
       this.log(`RAGV(${this.B_agv_active.AgvName})返回充电点`)
+      await this.agvMove(this.B_agv_active.AgvName, this.B_agv_active.Rfid, this.BatteryRfid)
       await this.taskReqSev.updateAgvInfo({
         AgvName: this.B_agv_active.AgvName,
         RunStatus: RunStatus.move,

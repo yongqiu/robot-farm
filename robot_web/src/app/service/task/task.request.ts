@@ -3,23 +3,23 @@ import { RequestService } from "../request.service";
 import { MoveActionModel, ITaskViewModel, AgvModel } from "./task.model";
 import { AGV_URL } from "src/app/config";
 
-interface IPostTask {
+export interface IPostTask {
     TaskID: number,
     TaskType: number,
     AGVName: string,
     SourcePort: string,
     DestPort: string,
-    IsRead: string,
+    IsRead: number,
     TaskTime: string
 }
 
-interface IPostAction {
+export interface IPostAction {
     ActionID: number,
     ActionType: number,
     AGVName: string,
     UpOrDown: number,
     IsRead: number,
-    ActionTime: Date
+    ActionTime: string
 }
 
 interface IAgvInfo {
@@ -46,7 +46,7 @@ export class TaskRequestService {
      * 获取avgInfo
      * @param AgvName 
      */
-    async getAgvHistoryInfo(AgvName: string): Promise<AgvModel> {
+    async getAgvByName(AgvName: string): Promise<AgvModel> {
         let res = await this.reqSev.queryServer({ url: '/api/getAgvbyName', method: 'get' }, { AgvName: AgvName })
         if (res.success) {
             return res.data
@@ -55,21 +55,14 @@ export class TaskRequestService {
         }
     }
 
-    /**
-     * 执行agv移动
-     * @param param 
-     */
-    async postAgvMoveAction(param: {
-        AGVName: string,
-        SourcePort: number,
-        DestPort: number,
-    }): Promise<boolean> {
-        let res = await this.reqSev.queryServer({ url: '/api/PostMove', method: 'post' }, param);
-        if (res.success) {
-            return true;
-        } else {
-            return false;
-        }
+    async changeAgvName(id: number, name: string){
+        let res = await this.reqSev.queryServer({ url: '/api/changeName', method: 'post' }, { id: id, name: name })
+        return res;
+    }
+
+    async getAllAgvs(){
+        let res = await this.reqSev.queryServer({ url: '/api/getAllAgvInfo', method: 'get' }, {})
+        return res;
     }
 
 
@@ -84,6 +77,11 @@ export class TaskRequestService {
      */
     async createTask(param: ITaskViewModel) {
         let res = await this.reqSev.queryServer({ url: '/api/CreateTask', method: 'post' }, param);
+        return res;
+    }
+
+    async deleteTask(id: string) {
+        let res = await this.reqSev.queryServer({ url: '/api/DeleteTask', method: 'delete' }, {id: id});
         return res;
     }
 
@@ -119,12 +117,12 @@ export class TaskRequestService {
     }
 
     async agvpostTask(postTask: IPostTask) {
-        let res = await this.reqSev.queryServer({ url: AGV_URL + '/PostTask', method: 'post' }, postTask)
+        let res = await this.reqSev.queryServer({ url: '/api/PostTask', method: 'post' }, postTask)
         return res;
     }
 
     async agvpostAction(postAction: IPostAction) {
-        let res = await this.reqSev.queryServer({ url: AGV_URL + '/PostAction', method: 'post' }, postAction)
+        let res = await this.reqSev.queryServer({ url: '/api/PostAction', method: 'post' }, postAction)
         return res;
     }
 

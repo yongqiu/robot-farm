@@ -78,7 +78,9 @@ export class ProductComponent implements OnInit {
   }
 
   async create() {
+    this.taskForm = {}
     this.taskForm.direction = 1;
+    this.taskForm.plateType = 1;
     this.createTaskView = true;
   }
 
@@ -114,7 +116,16 @@ export class ProductComponent implements OnInit {
   editTask(item) {
     console.log(item)
     this.taskForm = JSON.parse(JSON.stringify(item));
+    this.taskForm.plateType =1;
     this.createTaskView = true;
+  }
+
+  async deleteTask(data){
+    let res =  await this.taskReqServ.deleteTask(data.id)
+    if(res.success){
+      this.message.success('删除成功')
+      this.getTaskList();
+    }
   }
 
   startTask() {

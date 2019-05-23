@@ -6,7 +6,10 @@ const TASK = require('./controller/task');
 const FRAME = require('./controller/frame');
 
 // 定时开启
-socketTest.RefreshAllAgvInfo()
+setInterval(() => {
+    socketTest.RefreshAllAgvInfo()
+}, 10000);
+
 
 module.exports = (app) => {
     // app.use('/api/robot', require('./routes/api_robot'));
@@ -35,9 +38,10 @@ module.exports = (app) => {
     app.delete('/api/user/delete', USER.deleteUser);
     app.get('/api/user/getbyId', USER.getUserbyId);
     //agv
-    app.get('/api/GetAllAgvInfo', AGV.getAllAgvInfo);
+    app.get('/api/getAllAgvInfo', AGV.getAllAgvInfo);
     app.get('/api/getAgvbyName', AGV.findByAgvName);
     app.post('/api/PostAllAgvInfo', AGV.update)
+    app.post('/api/changeName', AGV.changeName)
     // move
     app.post('/api/PostMove', MOVE.create);
     app.get('/api/GetAllMove', MOVE.getList);
@@ -49,6 +53,7 @@ module.exports = (app) => {
     app.get('/api/GetAllTask', TASK.getList);
     app.post('/api/UpdateTask', TASK.update);       // agv更新信息的接口
     app.get('/api/GetTask', TASK.getTaskByID);
+    app.delete('/api/DeleteTask', TASK.delete);
     // frame
     app.post('/api/PostFRAME', FRAME.create);
     app.get('/api/GetAllFRAME', FRAME.getList);
