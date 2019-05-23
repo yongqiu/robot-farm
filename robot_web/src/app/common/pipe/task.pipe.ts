@@ -29,6 +29,17 @@ export class TaskPipe implements PipeTransform {
       }
     }
 
+    if (args == 'isFinished') {
+      switch (value) {
+        case 0:
+          return '未完成';
+        case 1:
+          return '已完成';
+        default:
+          return '未完成';
+      }
+    }
+
   }
 
 }
