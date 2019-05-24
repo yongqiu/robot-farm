@@ -1,13 +1,12 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import * as socketIo from 'socket.io-client';
-import { SOCKET_URL } from 'src/app/config';
-import { RequestService } from '../request.service';
 import { AgvModel, ITaskViewModel } from './task.model';
 import { TaskRequestService, IPostTask, IPostAction } from './task.request';
 import { Observable, of, observable } from 'rxjs';
 import { agvConfig } from './task.config';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as moment from 'moment';
+import { BASEURL } from 'src/app/config';
 
 enum RunStatus {
   stop,
@@ -54,7 +53,7 @@ export class TaskService {
   }
 
   initSocket(): void {
-    this.socket = socketIo(SOCKET_URL);
+    this.socket = socketIo(BASEURL);
     // console.log(this.socket)
     // 监听agv变化
     this.socket.on('getAgvInfo', (res) => {

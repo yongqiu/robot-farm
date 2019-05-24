@@ -9,9 +9,7 @@ export const AuthorConfig: any = {
 };
 
 // export const SOCKET_URL = '/'
-export const SOCKET_URL = 'http://127.0.0.1:3000'
-
-export const AGV_URL = "http://127.0.0.1:3000"
+export const BASEURL = "http://127.0.0.1:3000"
 
 // {
 //   "/api": {

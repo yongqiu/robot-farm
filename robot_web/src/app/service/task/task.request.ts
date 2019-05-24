@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RequestService } from "../request.service";
 import { MoveActionModel, ITaskViewModel, AgvModel } from "./task.model";
-import { AGV_URL } from "src/app/config";
+import { BASEURL } from "src/app/config";
 
 export interface IPostTask {
     TaskID: number,
@@ -47,7 +47,7 @@ export class TaskRequestService {
      * @param AgvName 
      */
     async getAgvByName(AgvName: string): Promise<AgvModel> {
-        let res = await this.reqSev.queryServer({ url: '/api/getAgvbyName', method: 'get' }, { AgvName: AgvName })
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/getAgvbyName', method: 'get' }, { AgvName: AgvName })
         if (res.success) {
             return res.data
         } else {
@@ -55,19 +55,19 @@ export class TaskRequestService {
         }
     }
 
-    async changeAgvName(id: number, name: string){
-        let res = await this.reqSev.queryServer({ url: '/api/changeName', method: 'post' }, { id: id, name: name })
+    async changeAgvName(id: number, name: string) {
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/changeName', method: 'post' }, { id: id, name: name })
         return res;
     }
 
-    async getAllAgvs(){
-        let res = await this.reqSev.queryServer({ url: '/api/getAllAgvInfo', method: 'get' }, {})
+    async getAllAgvs() {
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/getAllAgvInfo', method: 'get' }, {})
         return res;
     }
 
 
     async updateAgvInfo(param) {
-        let res = await this.reqSev.queryServer({ url: '/api/PostAllAgvInfo', method: 'post' }, param);
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/PostAllAgvInfo', method: 'post' }, param);
         return res;
     }
 
@@ -76,12 +76,12 @@ export class TaskRequestService {
      * @param param 
      */
     async createTask(param: ITaskViewModel) {
-        let res = await this.reqSev.queryServer({ url: '/api/CreateTask', method: 'post' }, param);
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/CreateTask', method: 'post' }, param);
         return res;
     }
 
     async deleteTask(id: string) {
-        let res = await this.reqSev.queryServer({ url: '/api/DeleteTask', method: 'delete' }, {id: id});
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/DeleteTask', method: 'delete' }, { id: id });
         return res;
     }
 
@@ -91,7 +91,7 @@ export class TaskRequestService {
      * @memberof TaskRequestService
      */
     async getTaskList() {
-        let res = await this.reqSev.queryServer({ url: '/api/GetAllTask', method: 'get' }, {});
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/GetAllTask', method: 'get' }, {});
         return res;
     }
 
@@ -102,7 +102,7 @@ export class TaskRequestService {
      * @memberof TaskRequestService
      */
     async updateTask(param: ITaskViewModel) {
-        let res = await this.reqSev.queryServer({ url: '/api/UpdateTask', method: 'post' }, param);
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/UpdateTask', method: 'post' }, param);
         return res;
     }
 
@@ -112,22 +112,22 @@ export class TaskRequestService {
      * @memberof TaskRequestService
      */
     async getFrameList() {
-        let res = await this.reqSev.queryServer({ url: '/api/GetAllFRAME', method: 'get' }, {})
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/GetAllFRAME', method: 'get' }, {})
         return res;
     }
 
     async agvpostTask(postTask: IPostTask) {
-        let res = await this.reqSev.queryServer({ url: '/api/PostTask', method: 'post' }, postTask)
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/PostTask', method: 'post' }, postTask)
         return res;
     }
 
     async agvpostAction(postAction: IPostAction) {
-        let res = await this.reqSev.queryServer({ url: '/api/PostAction', method: 'post' }, postAction)
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/PostAction', method: 'post' }, postAction)
         return res;
     }
 
     async getAllAgvInfo(): Promise<Array<IAgvInfo>> {
-        let res = await this.reqSev.queryServer({ url: AGV_URL + '/GetAllAgvInfo', method: 'get' }, {})
+        let res = await this.reqSev.queryServer({ url: BASEURL + '/api/robot/getAllAgvInfo', method: 'get' }, {})
         return res;
     }
 }

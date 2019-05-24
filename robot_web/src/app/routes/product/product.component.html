@@ -18,23 +18,23 @@
         <div nz-row>
           <div nz-col nzSpan="18">
             <div class="table-panel">
-              <nz-table #upTable nzBordered [nzData]="taskSev.taskList" [nzPageSize]="8" [nzScroll]="{ x: '900px' }">
+              <nz-table #upTable nzBordered [nzData]="taskSev.taskList" [nzPageSize]="8">
                 <thead>
                   <tr>
-                    <th nzWidth="50px" nzLeft="0px"></th>
-                    <th nzWidth="100px">任务id</th>
-                    <th nzWidth="100px">状态</th>
-                    <th nzWidth="100px">架号</th>
-                    <th nzWidth="100px">BAGV停靠点</th>
-                    <th nzWidth="100px">RAGV停靠点</th>
-                    <th nzWidth="100px">上架蔬菜</th>
-                    <th nzWidth="200px">上架日期</th>
-                    <th nzWidth="100px" nzRight="0px">操作</th>
+                    <th></th>
+                    <th>任务id</th>
+                    <th>状态</th>
+                    <th>架号</th>
+                    <th>BAGV停靠点</th>
+                    <th>RAGV停靠点</th>
+                    <th>上架蔬菜</th>
+                    <th>上架日期</th>
+                    <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let data of upTable.data;let i = index">
-                    <td nzShowCheckbox [(nzChecked)]="data.checked" nzLeft="0px"></td>
+                    <td nzShowCheckbox [(nzChecked)]="data.checked"></td>
                     <td>
                       {{data.id}}
                     </td>
@@ -68,6 +68,7 @@
             </div>
           </div>
           <div nz-col nzSpan="6">
+            <p>打印列表：</p>
             <p *ngFor="let action of taskSev.actionList">{{action}}</p>
           </div>
         </div>
