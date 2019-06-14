@@ -1,16 +1,16 @@
 module.exports = {
     mysql: {
-        host: '39.105.149.189',
+        host: 'localhost',
         user: 'root',
-        password: 'wyq#120921',
+        password: '123456',
         database: 'robot', // 前面建的user表位于这个数据库中 
         port: 3306
     },
     development: {
         "username": "root",
-        "password": "wyq#120921",
+        "password": "123456",
         "database": "robot",
-        "host": "39.105.149.189",
+        "host": "localhost",
         "port": 3306,
         "dialect": "postgres"
     },

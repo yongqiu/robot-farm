@@ -6,11 +6,11 @@ const TASK = require('./controller/task');
 const FRAME = require('./controller/frame');
 
 // 定时开启
-setInterval(() => {
-    socketTest.RefreshAllAgvInfo()
-}, 10000);
+// setInterval(() => {
+//     socketTest.RefreshAllAgvInfo()
+// }, 10000);
 
-
+socketTest.RefreshAllAgvInfo()
 module.exports = (app) => {
     // app.use('/api/robot', require('./routes/api_robot'));
     // app.use('/', require('./routes/index.js'))
