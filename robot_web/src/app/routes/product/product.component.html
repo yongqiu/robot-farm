@@ -3,7 +3,9 @@
     <a href="javascript:;" (click)="analogMoveTask()">模拟agv获取位移任务</a>
   </p> -->
   <p>
-    <input nz-input placeholder="agvName" style="width:100px" [(ngModel)]="moveAction.name">
+    <nz-select style="width: 220px;" [(ngModel)]="moveAction.name" nzPlaceHolder="选择要模拟的agv">
+      <nz-option *ngFor="let agv of agvList" [nzValue]="agv" [nzLabel]="agv"></nz-option>
+    </nz-select>
     <input nz-input placeholder="当前位置" style="width:100px" [(ngModel)]="moveAction.port">
     <a href="javascript:;" (click)="analogMoveAction()">模拟agv执行位移动作</a>
   </p>
@@ -68,7 +70,9 @@
             </div>
           </div>
           <div nz-col nzSpan="6">
-            <p *ngFor="let action of taskSev.actionList">{{action}}</p>
+            <div #consoleList class="consoleList" style="max-height:300px;overFlow:auto">
+              <p *ngFor="let action of taskSev.actionList">{{action}}</p>
+            </div>
           </div>
         </div>
       </div>

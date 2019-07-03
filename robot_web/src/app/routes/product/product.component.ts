@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { isNullOrUndefined } from 'util';
 import { RequestService } from '../../service/request.service';
 import { ITaskViewModel, VEGETABLES } from 'src/app/service/task/task.model';
@@ -15,6 +15,8 @@ import { TaskRequestService } from 'src/app/service/task/task.request';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
+  @ViewChild('consoleList') private myScrollContainer: ElementRef;
+  agvList = ['AGV01', 'AGV02', 'AGV03', 'AGV04']
   dataSet = [];
   // i = 1;
   editCache = {};
@@ -26,7 +28,7 @@ export class ProductComponent implements OnInit {
   actionList: any = [];
   // 模拟
   moveAction = {
-    name: '',
+    name: null,
     port: ''
   }
 
@@ -41,7 +43,19 @@ export class ProductComponent implements OnInit {
         }
       }
     }
+
+    this.taskSev.logEvent.subscribe(text => {
+      this.scrollToBottom()
+    })
   }
+
+  scrollToBottom(): void {
+    try {
+      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.clientHeight + 25;
+    } catch (err) { }
+  }
+
+
 
   // async analogMoveTask() {
   //   let res = await this.reqSev.queryServer({ url: '/api/GetLastMove', method: 'get' }, {});
@@ -116,13 +130,13 @@ export class ProductComponent implements OnInit {
   editTask(item) {
     console.log(item)
     this.taskForm = JSON.parse(JSON.stringify(item));
-    this.taskForm.plateType =1;
+    this.taskForm.plateType = 1;
     this.createTaskView = true;
   }
 
-  async deleteTask(data){
-    let res =  await this.taskReqServ.deleteTask(data.id)
-    if(res.success){
+  async deleteTask(data) {
+    let res = await this.taskReqServ.deleteTask(data.id)
+    if (res.success) {
       this.message.success('删除成功')
       this.getTaskList();
     }

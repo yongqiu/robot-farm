@@ -127,7 +127,7 @@ export class TaskRequestService {
     }
 
     async getAllAgvInfo(): Promise<Array<IAgvInfo>> {
-        let res = await this.reqSev.queryServer({ url: AGV_URL + '/GetAllAgvInfo', method: 'get' }, {})
+        let res = await this.reqSev.queryServer({ url: '/api/GetAllAgvInfo', method: 'get' }, {})
         return res;
     }
 }

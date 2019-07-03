@@ -4,7 +4,7 @@ import { SOCKET_URL } from 'src/app/config';
 import { RequestService } from '../request.service';
 import { AgvModel, ITaskViewModel } from './task.model';
 import { TaskRequestService, IPostTask, IPostAction } from './task.request';
-import { Observable, of, observable } from 'rxjs';
+import { Observable, of, observable, Subject } from 'rxjs';
 import { agvConfig } from './task.config';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as moment from 'moment';
@@ -42,6 +42,8 @@ export class TaskService {
 
   BatteryRfid = 1000;
   currentTask: ITaskViewModel;
+
+  logEvent: Subject<any> =  new Subject();
   constructor(private taskReqSev: TaskRequestService, private message: NzMessageService) {
     for (let i = 0; i < 4; i++) {
       this.agvList.push(new AgvModel({
@@ -50,7 +52,6 @@ export class TaskService {
     }
     this.getAgvList()
     this.initSocket()
-    console.log(moment().toDate().toString())
   }
 
   initSocket(): void {
@@ -133,7 +134,9 @@ export class TaskService {
     let startPort = this.A_agv.Rfid;
     let endPort = targetFrame.stopAgv1;
     ///////////////调用agv移动接口///////////////
-    this.log(`BAGV(AGV01)调用posttask`)
+    
+    this.findenableB_agv(targetFrame);
+    this.log(`BAGV(AGV01)调用posttask，由${startPort}移动到${endPort}`)
     await this.agvMove(this.A_agv.AgvName, startPort, endPort)
     let aa = {
       AgvName: this.A_agv.AgvName,
@@ -142,18 +145,9 @@ export class TaskService {
     }
     await this.taskReqSev.updateAgvInfo(aa)
     //////////////////监听agv位置///////////////
-    this.log(`BAGV(AGV01)正在由${startPort}移动到${endPort}`)
+    
 
-    let ragv = await this.listenAgvRfid(this.A_agv.AgvName, endPort);
-    if (ragv) {
-      this.log(`BAGV(AGV01)已到达${endPort}`)
-      await this.taskReqSev.updateAgvInfo({
-        AgvName: this.A_agv.AgvName,
-        RunStatus: RunStatus.stop,
-      })
-    }
-
-    this.findenableB_agv(targetFrame);
+    
   }
 
   listenAgvRfid(agvName, endPort): Promise<AgvModel> {
@@ -164,6 +158,7 @@ export class TaskService {
         that.message.info('等待'+agvName+'到达'+endPort+'（2秒监听一次）')
         if (res.Rfid == endPort) {
           clearInterval(timer);
+          that.log(`${agvName}已到达${endPort}`)
           resolve(res);
         }
       }, 3000);
@@ -186,7 +181,7 @@ export class TaskService {
       finder = this.agvList.find(agv => {
         return agv.AgvName != 'AGV01' && agv.IsActive == IsActive.charge && agv.RunStatus == RunStatus.stop
       })
-      this.log(`RAGV(${finder.AgvName})调用PostAction`)
+      this.log(`RAGV(${finder.AgvName})调用PostAction,取(放)料架`)
       let param: IPostAction = {
         ActionID: this.currentTask.id,
         ActionType: 1,
@@ -202,16 +197,26 @@ export class TaskService {
     
     let startPort = this.B_agv_active.Rfid;
     let endPort = targetFrame.stopAgv2;
-    this.log(`RAGV(${this.B_agv_active.AgvName})正在由${startPort}移动到${endPort}`)
     ////////////////执行移动命令/////////////////
+    this.log(`RAGV(${this.B_agv_active.AgvName})调用posttask，由${startPort}移动到${endPort}`)
     await this.agvMove(this.B_agv_active.AgvName, startPort, endPort)
     await this.taskReqSev.updateAgvInfo({
       AgvName: this.B_agv_active.AgvName,
       RunStatus: RunStatus.move,
       IsActive: IsActive.working
     })
-    let ragv = await this.listenAgvRfid(this.B_agv_active.AgvName, endPort);
-    if (ragv) {
+    let ragvB = this.listenAgvRfid(this.B_agv_active.AgvName, targetFrame.stopAgv2);
+    let ragvA = this.listenAgvRfid(this.A_agv.AgvName, targetFrame.stopAgv1);
+    await Promise.all([ragvA, ragvB])
+    console.log(123123123)
+    if (ragvA) {
+      this.log(`BAGV(AGV01)已到达${endPort}`)
+      await this.taskReqSev.updateAgvInfo({
+        AgvName: this.A_agv.AgvName,
+        RunStatus: RunStatus.stop,
+      })
+    }
+    if (ragvB) {
       this.log(`RAGV(${this.B_agv_active.AgvName})已到达${endPort} `)
       await this.taskReqSev.updateAgvInfo({
         AgvName: this.B_agv_active.AgvName,
@@ -288,14 +293,14 @@ export class TaskService {
     this.currentTask.isFinished = 1;
     await this.taskReqSev.updateTask(this.currentTask);
     this.startTask();
-    let res2 = await this.listenAgvRfid(this.B_agv_active.AgvName, this.BatteryRfid);
-    if(res2) {
-      await this.taskReqSev.updateAgvInfo({
-        AgvName: this.B_agv_active.AgvName,
-        RunStatus: RunStatus.stop,
-        IsActive: IsActive.charge
-      })
-    }
+    // let res2 = await this.listenAgvRfid(this.B_agv_active.AgvName, this.BatteryRfid);
+    // if(res2) {
+    //   await this.taskReqSev.updateAgvInfo({
+    //     AgvName: this.B_agv_active.AgvName,
+    //     RunStatus: RunStatus.stop,
+    //     IsActive: IsActive.charge
+    //   })
+    // }
   }
 
   wait2000sec() {
@@ -335,6 +340,11 @@ export class TaskService {
 
   log(text: string) {
     this.actionList.push(text)
+    let that = this;
+    setTimeout(() => {
+      that.logEvent.next(text)
+    }, 500);
+    
   }
 
   // checkEndPort() {
