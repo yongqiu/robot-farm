@@ -122,7 +122,7 @@ export class AuthorityComponent implements OnInit {
   }
 
   async editRole(role) {
-    let res = await this.reqSev.queryServer({ url: '/api/robot/roleData', method: 'get' }, { id: role.id })
+    let res = await this.reqSev.queryServer({ url: '/api/roleData', method: 'get' }, { id: role.id })
     let points = JSON.parse(res.msg[0].roleInfo)
     points.forEach(element => {
       let index = this.roleData.permission.findIndex(e => {

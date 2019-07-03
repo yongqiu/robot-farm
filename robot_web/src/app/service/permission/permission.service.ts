@@ -13,43 +13,43 @@ export class PermissionService {
   }
 
   async getRoleList() {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/role/getList', method: 'get' }, {})
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/role/getList', method: 'get' }, {})
   }
 
   async createRole(param) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/role/create', method: 'post' }, param)
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/role/create', method: 'post' }, param)
   }
 
   async updateRole(param) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/role/update', method: 'post' }, param)
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/role/update', method: 'post' }, param)
   }
 
   async deleteRole(id) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/role/delete', method: 'delete' }, { id: id })
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/role/delete', method: 'delete' }, { id: id })
   }
 
   async createUser(param) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/user/create', method: 'post' }, param)
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/user/create', method: 'post' }, param)
   }
 
   async updateUser(param) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/user/update', method: 'post' }, param)
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/user/update', method: 'post' }, param)
   }
 
   async getUserList() {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/user/getList', method: 'get' }, {})
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/user/getList', method: 'get' }, {})
   }
 
   async deleteUser(id) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/user/delete', method: 'delete' }, { id: id })
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/user/delete', method: 'delete' }, { id: id })
   }
 
   async getUserById(id) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/user/getbyId', method: 'get' }, { id: id })
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/user/getbyId', method: 'get' }, { id: id })
   }
 
   async login(param) {
-    return await this.reqSev.queryServer({ url: AGV_URL + '/api/robot/login', method: 'post' }, param)
+    return await this.reqSev.queryServer({ url: AGV_URL + '/api/login', method: 'post' }, param)
   }
 
   canMenu(key) {

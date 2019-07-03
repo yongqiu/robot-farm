@@ -29,30 +29,23 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.all("*", function (req, res, next) {
-  // 指定域名跨域
-  /*var orginList = [
-    "http://www.zhangpeiyue.com",
-    "http://www.alibaba.com",
-    "http://www.qq.com",
-    "http://www.baidu.com"
-  ]
-  if (orginList.includes(req.headers.origin.toLowerCase())) {
-    //设置允许跨域的域名，*代表允许任意域名跨域
-    res.header("Access-Control-Allow-Origin", req.headers.origin);
-  }*/
-  
-  //设置允许跨域的域名，*代表允许任意域名跨域
-  res.header("Access-Control-Allow-Origin", "*");
-  //允许的header类型
-  res.header("Access-Control-Allow-Headers", "content-type");
-  //跨域允许的请求方式 
-  res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
-  if (req.method.toLowerCase() == 'options')
-    res.send(200);  //让options尝试请求快速结束
-  else
-    next();
-})
+//设置请求头
+var allowCrossDomain = function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+}
+
+//解决跨域问题
+app.use(allowCrossDomain);
+
 //bodyParser 相关参数设置
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -60,7 +53,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', routes);
-// app.use('/api/robot', robot); // robot的api路由
+// app.use('/api/', robot); // robot的api路由
 
 // app.set('port', 3000);
 //Server's IP address

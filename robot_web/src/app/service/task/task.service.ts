@@ -6,6 +6,7 @@ import { Observable, of, observable, Subject } from 'rxjs';
 import { agvConfig } from './task.config';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as moment from 'moment';
+import { SOCKET_URL } from 'src/app/config';
 
 enum RunStatus {
   stop,
@@ -53,7 +54,7 @@ export class TaskService {
   }
 
   initSocket(): void {
-    // this.socket = socketIo(BASEURL);
+    this.socket = socketIo(SOCKET_URL);
     // console.log(this.socket)
     // 监听agv变化
     this.socket.on('getAgvInfo', (res) => {
