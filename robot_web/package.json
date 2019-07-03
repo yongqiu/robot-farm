@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start-wyq": "ng serve --host 172.16.4.124 --port 8888 --proxy-config proxy.config.json ",
-    "start-mac": "ng serve --host 192.168.3.9 --port 8888 --proxy-config proxy.config.json",
+    "start-wyq": "ng serve --host 172.16.4.124 --port 8888",
+    "start-mac": "ng serve --host 192.168.3.9 --port 8888",
     "build": "ng build --prod --base-href /view",
     "test": "ng test",
     "lint": "ng lint",

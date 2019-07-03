@@ -4,7 +4,7 @@ const AGV = require('./agvInfo');
 var request = require('request');
 var PostTaskUrl = 'http://127.0.0.1:3000/agv/PostTaskMy'
 var PostActionUrl = 'http://127.0.0.1:3000/agv/PostTaskMy'
-var GetAllAgvInfoUrl = 'http://127.0.0.1:3000/api/getAllAgvInfo'
+var GetAllAgvInfoUrl = 'http://127.0.0.1:3000/api/robot/getAllAgvInfo'
 
 module.exports = {
   create(req, res) {
@@ -27,10 +27,11 @@ module.exports = {
       url: GetAllAgvInfoUrl,
       method: 'GET',
     }, async (error, response, body) => {
-      let date = Date.parse(new Date()) / 1000;
-      JSON.parse(body).forEach(async (element) => {
-        AGV.updateAvgInfo(element)
-      });
+      console.log(body)
+      // let date = Date.parse(new Date()) / 1000;
+      // JSON.parse(body).forEach(async (element) => {
+      //   AGV.updateAvgInfo(element)
+      // });
     });
 
     // req.io.sockets.emit("getAgvInfo", { success: true, type: 1, data: req.body });
