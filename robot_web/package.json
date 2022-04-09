@@ -24,7 +24,7 @@
     "@angular/router": "^6.1.0",
     "@types/socket.io-client": "^1.4.32",
     "core-js": "^2.5.4",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "ng-zorro-antd": "^1.6.0",
     "ngx-watcher": "^1.0.0",
     "rxjs": "^6.0.0",
